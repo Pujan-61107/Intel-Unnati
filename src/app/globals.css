@@ -35,30 +35,30 @@
     --background: 236 65% 30%; /* Dark Navy Blue */
     --foreground: 210 40% 98%; /* Light text */
 
-    --card: 236 60% 35%;
+    --card: 236 55% 28%; /* Slightly darker/richer navy */
     --card-foreground: 210 40% 98%;
 
-    --popover: 236 60% 35%;
+    --popover: 236 50% 25%; /* Even darker for popovers */
     --popover-foreground: 210 40% 98%;
 
-    --primary: 181 100% 74%; /* Electric Blue */
-    --primary-foreground: 236 65% 10%; /* Very dark blue for contrast on electric blue */
+    --primary: 210 100% 70%; /* Brighter, appealing blue */
+    --primary-foreground: 210 100% 10%; /* Deep blue for contrast */
 
-    --secondary: 236 50% 40%; /* Slightly lighter navy */
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 236 45% 38%; /* Subtle, darker navy for secondary */
+    --secondary-foreground: 210 30% 90%; /* Slightly dimmer light text */
 
-    --muted: 236 45% 45%; /* Muted navy */
-    --muted-foreground: 220 15% 75%; /* Lighter muted text */
+    --muted: 236 40% 45%; /* Muted navy */
+    --muted-foreground: 220 20% 70%; /* Adjusted muted text */
 
-    --accent: 110 100% 53%; /* Neon Green */
-    --accent-foreground: 110 100% 10%; /* Very dark green for contrast on neon green */
+    --accent: 45 100% 60%; /* Vibrant gold/yellow */
+    --accent-foreground: 45 100% 10%; /* Dark brown/gold for contrast */
     
-    --destructive: 0 70% 55%; /* A brighter red for dark background */
+    --destructive: 0 75% 60%; /* More saturated red */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 236 50% 45%; /* Navy border */
-    --input: 236 50% 45%; /* Navy input background */
-    --ring: 181 100% 74%; /* Electric Blue for rings */
+    --border: 236 40% 40%; /* Slightly darker border */
+    --input: 236 40% 40%; /* Matching input background */
+    --ring: 210 100% 70%; /* Matching new primary */
   }
 }
 

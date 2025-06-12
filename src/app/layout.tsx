@@ -1,6 +1,13 @@
 import type {Metadata} from 'next';
+import { Space_Grotesk as FontSpaceGrotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+
+const fontSpaceGrotesk = FontSpaceGrotesk({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '700'],
+  variable: '--font-space-grotesk',
+});
 
 export const metadata: Metadata = {
   title: 'TraceSmart - Product Traceability System',
@@ -13,12 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`${fontSpaceGrotesk.variable} dark`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet" />
+        {/* Google Font <link> tags removed, handled by next/font */}
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
         {children}
