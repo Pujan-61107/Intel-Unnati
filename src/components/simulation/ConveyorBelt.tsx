@@ -1,0 +1,77 @@
+"use client";
+
+import type { Product } from '@/lib/types';
+import { Package, ChevronRight, RotateCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Image from 'next/image';
+
+interface ConveyorBeltProps {
+  currentProduct: Product | null;
+  onNextProduct: () => void;
+  productQueueCount: number;
+  isProcessing: boolean;
+}
+
+export default function ConveyorBelt({ currentProduct, onNextProduct, productQueueCount, isProcessing }: ConveyorBeltProps) {
+  return (
+    <Card className="shadow-lg overflow-hidden">
+      <CardHeader className="bg-secondary/50">
+        <CardTitle className="flex items-center text-lg font-headline">
+          <Package className="mr-2 h-6 w-6 text-primary" />
+          Conveyor & Inspection Zone
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Upcoming Products Queue */}
+          <div className="flex flex-col items-center text-center">
+            <div className="flex items-center text-muted-foreground mb-2">
+              <RotateCcw className="h-5 w-5 mr-2 animate-spin [animation-duration:5s]" />
+              <span>Product Queue</span>
+            </div>
+            <div className="flex space-x-2">
+              {Array.from({ length: Math.min(productQueueCount, 3) }).map((_, i) => (
+                <div key={`queue-${i}`} className="p-3 bg-muted rounded-lg shadow animate-pulse">
+                  <Package className="h-8 w-8 text-muted-foreground" />
+                </div>
+              ))}
+              {productQueueCount > 3 && <span className="text-muted-foreground self-center">+{productQueueCount-3} more</span>}
+            </div>
+            {productQueueCount === 0 && !currentProduct && <p className="text-sm text-muted-foreground mt-2">No products in queue.</p>}
+          </div>
+
+          {/* Inspection Zone */}
+          <div className="flex-1 flex justify-center items-center min-h-[150px] border-2 border-dashed border-border rounded-lg p-4 bg-background shadow-inner relative">
+            {currentProduct ? (
+              <div className="text-center animate-fadeIn">
+                <Image 
+                  src="https://placehold.co/100x80.png" // Generic product box image
+                  alt="Product" 
+                  width={100} 
+                  height={80} 
+                  className="mx-auto mb-2 rounded"
+                  data-ai-hint="electronic device"
+                />
+                <p className="font-semibold text-primary">{currentProduct.deviceId}</p>
+                <p className="text-xs text-muted-foreground">Arrived for inspection</p>
+              </div>
+            ) : (
+              <p className="text-muted-foreground">Inspection zone empty</p>
+            )}
+            {/* Animated Chevrons indicating movement */}
+             <ChevronRight className="absolute left-[-20px] top-1/2 -translate-y-1/2 h-8 w-8 text-primary opacity-50 animate-ping [animation-duration:2s]" />
+             <ChevronRight className="absolute right-[-20px] top-1/2 -translate-y-1/2 h-8 w-8 text-primary opacity-50" />
+          </div>
+        </div>
+        
+        <div className="mt-6 flex justify-center">
+          <Button onClick={onNextProduct} disabled={isProcessing || productQueueCount === 0} className="bg-primary hover:bg-primary/90">
+            <ChevronRight className="mr-2 h-5 w-5" />
+            Load Next Product
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
