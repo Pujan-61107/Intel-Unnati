@@ -16,7 +16,7 @@ const initialProducts: Product[] = [
   { id: 'p1', deviceId: 'DEV001', batchId: 'BATCH-A1', manufacturingDate: '2024-07-15', rohsCompliant: true, serialNumber: 'SN-TRSMT-001' },
   { id: 'p2', deviceId: 'DEV002', batchId: 'BATCH-A2', manufacturingDate: '2024-07-16', rohsCompliant: false, serialNumber: 'SN-TRSMT-002' },
   { id: 'p3', deviceId: 'DEV003', batchId: 'BATCH-B1', manufacturingDate: '2024-07-17', rohsCompliant: true, serialNumber: 'SN-TRSMT-003' },
-  { id: 'p4', deviceId: 'DEV004', batchId: 'BATCH-B2', manufacturingDate: '2024-07-18', rohsCompliant: true, serialNumber: 'SN-TRSMT-004', labelImageUrl: 'https://placehold.co/300x150.png' }, // Corrected placeholder
+  { id: 'p4', deviceId: 'DEV004', batchId: 'BATCH-B2', manufacturingDate: '2024-07-18', rohsCompliant: true, serialNumber: 'SN-TRSMT-004', labelImageUrl: 'https://placehold.co/300x150.png' },
   { id: 'p5', deviceId: 'DEV005', batchId: 'BATCH-C1', manufacturingDate: '2024-07-19', rohsCompliant: true, serialNumber: 'SN-TRSMT-005' },
 ];
 
@@ -34,46 +34,45 @@ export default function TraceSmartPage() {
     setLogs(prevLogs => [{ id: uuidv4(), timestamp: new Date().toLocaleTimeString(), message, type }, ...prevLogs]);
   }, []);
 
-  useEffect(() => {
-    // Auto-load first product if queue has items and no product is current
-    if (!currentProduct && productQueue.length > 0) {
-      handleNextProduct();
-    }
-  }, [currentProduct, productQueue.length]); // Removed handleNextProduct from deps to avoid loop
-
   const handleNextProduct = useCallback(() => {
     if (productQueue.length === 0) {
       addLog("Product queue is empty.", 'info');
       toast({ title: "Queue Empty", description: "No more products to process." });
-      setCurrentProduct(null); // Ensure current product is cleared
+      setCurrentProduct(null);
       setProcessStatus('idle');
       return;
     }
 
-    if (processStatus === 'ai_validating' || (currentProduct && processStatus !== 'validation_complete_accepted' && processStatus !== 'validation_complete_rejected' && processStatus !== 'idle' && processStatus !== 'inspecting')) {
-      addLog("Cannot load next product: Current product processing is not complete.", 'error');
-      toast({ title: "Processing Error", description: "Complete current product processing before loading next.", variant: "destructive" });
+    if (processStatus === 'ai_validating') {
+      addLog("Cannot load next product: AI Validation in progress for current product.", 'error');
+      toast({ title: "Processing Error", description: "Wait for AI validation to complete before loading the next product.", variant: "destructive" });
       return;
     }
     
     const nextProduct = productQueue[0];
     setProductQueue(prev => prev.slice(1));
     setCurrentProduct(nextProduct);
-    setAiValidationResult(null); // Reset AI result for new product
+    setAiValidationResult(null);
     setProcessStatus('inspecting');
     addLog(`Product ${nextProduct.deviceId} (SN: ${nextProduct.serialNumber}) moved to inspection.`, 'info');
-  }, [productQueue, addLog, toast, processStatus, currentProduct]);
+  }, [productQueue, addLog, toast, processStatus]);
+
+  useEffect(() => {
+    // Auto-load first product if queue has items and no product is current
+    if (!currentProduct && productQueue.length > 0) {
+      handleNextProduct();
+    }
+  }, [currentProduct, productQueue.length, handleNextProduct]);
 
 
   const handleGenerateLabel = () => {
     if (!currentProduct) return;
     
-    // Simulate compliance checks before label generation (internal logic)
-    const compliancePassed = currentProduct.rohsCompliant; // Simplified check
+    const compliancePassed = currentProduct.rohsCompliant; 
     if (!compliancePassed) {
         addLog(`Compliance check failed for ${currentProduct.deviceId}. Label not generated.`, 'error');
         toast({ title: "Compliance Failed", description: `${currentProduct.deviceId} is not RoHS compliant.`, variant: "destructive" });
-        setProcessStatus('validation_complete_rejected'); // Or a specific 'compliance_failed' status
+        setProcessStatus('validation_complete_rejected'); 
         return;
     }
 
@@ -118,22 +117,21 @@ export default function TraceSmartPage() {
       const errorMessage = error instanceof Error ? error.message : "Unknown AI validation error";
       addLog(`AI validation error for ${currentProduct.deviceId}: ${errorMessage}`, 'error');
       setAiValidationResult({ isValid: false, validationMessage: `Error: ${errorMessage}` });
-      setProcessStatus('validation_complete_rejected'); // Treat AI error as rejection
+      setProcessStatus('validation_complete_rejected'); 
       toast({ title: "AI Error", description: `Validation failed: ${errorMessage}`, variant: "destructive" });
     } finally {
       setIsLoadingAi(false);
     }
   };
 
-  const isProcessingAnyProduct = processStatus !== 'idle' && processStatus !== 'validation_complete_accepted' && processStatus !== 'validation_complete_rejected' && processStatus !== 'inspecting';
+  const isProcessingAnyProduct = processStatus === 'ai_validating';
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background font-body">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column: Conveyor and Inspection Station */}
           <div className="lg:col-span-2 space-y-6">
             <ConveyorBelt 
               currentProduct={currentProduct} 
@@ -151,7 +149,6 @@ export default function TraceSmartPage() {
             />
           </div>
 
-          {/* Right Column: Logs */}
           <div className="lg:col-span-1">
             <LogDisplay logs={logs} />
           </div>
