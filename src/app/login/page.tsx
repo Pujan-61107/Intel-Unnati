@@ -1,15 +1,44 @@
 
+"use client";
+
 import AuthFormWrapper from '@/components/auth/AuthFormWrapper';
 import LoginForm from '@/components/auth/LoginForm';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { Loader2 } from 'lucide-react';
 
-export const metadata: Metadata = {
+// Metadata needs to be defined outside the component for static export
+const metadata: Metadata = {
   title: 'Login - TraceSmart',
   description: 'Login to your TraceSmart account.',
 };
 
+// export { metadata }; // Export if needed by build process, usually Next.js handles this.
+
 export default function LoginPage() {
+  const { isLoggedIn, isLoadingAuth } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoadingAuth && isLoggedIn) {
+      router.push('/');
+    }
+  }, [isLoggedIn, isLoadingAuth, router]);
+
+  if (isLoadingAuth || (!isLoadingAuth && isLoggedIn)) {
+     // Show loading spinner while checking auth or if redirecting
+    return (
+       <AuthFormWrapper title="" showLogo={false}>
+        <div className="flex justify-center items-center h-32">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      </AuthFormWrapper>
+    );
+  }
+
   return (
     <AuthFormWrapper
       title="Sign In to TraceSmart"

@@ -1,7 +1,9 @@
+
 import type {Metadata} from 'next';
 import { Space_Grotesk as FontSpaceGrotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const fontSpaceGrotesk = FontSpaceGrotesk({
   subsets: ['latin'],
@@ -21,11 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${fontSpaceGrotesk.variable} dark`}>
-      <head>
-        {/* Google Font <link> tags removed, handled by next/font */}
-      </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Toaster />
       </body>
     </html>

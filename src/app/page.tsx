@@ -4,13 +4,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Product, LogEntry, ValidationResult, ProcessStatus } from '@/lib/types';
 import { validateLabelQuality, type ValidateLabelQualityInput } from '@/ai/flows/validate-label-quality';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 import Header from '@/components/layout/Header';
 import ConveyorBelt from '@/components/simulation/ConveyorBelt';
 import InspectionStation from '@/components/simulation/InspectionStation';
 import LogDisplay from '@/components/simulation/LogDisplay';
 import { useToast } from "@/hooks/use-toast";
-import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs for logs
+import { v4 as uuidv4 } from 'uuid';
+import { Loader2 } from 'lucide-react';
 
 const initialProducts: Product[] = [
   { id: 'p1', deviceId: 'DEV001', batchId: 'BATCH-A1', manufacturingDate: '2024-07-15', rohsCompliant: true, serialNumber: 'SN-TRSMT-001' },
@@ -29,6 +32,14 @@ export default function TraceSmartPage() {
   const [processStatus, setProcessStatus] = useState<ProcessStatus>('idle');
   const [isLoadingAi, setIsLoadingAi] = useState(false);
   const { toast } = useToast();
+  const { isLoggedIn, isLoadingAuth } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoadingAuth && !isLoggedIn) {
+      router.push('/login');
+    }
+  }, [isLoggedIn, isLoadingAuth, router]);
 
   const addLog = useCallback((message: string, type: LogEntry['type']) => {
     setLogs(prevLogs => [{ id: uuidv4(), timestamp: new Date().toLocaleTimeString(), message, type }, ...prevLogs]);
@@ -58,11 +69,10 @@ export default function TraceSmartPage() {
   }, [productQueue, addLog, toast, processStatus]);
 
   useEffect(() => {
-    // Auto-load first product if queue has items and no product is current
-    if (!currentProduct && productQueue.length > 0) {
+    if (isLoggedIn && !currentProduct && productQueue.length > 0 && processStatus !== 'ai_validating') {
       handleNextProduct();
     }
-  }, [currentProduct, productQueue.length, handleNextProduct]);
+  }, [isLoggedIn, currentProduct, productQueue.length, processStatus, handleNextProduct]);
 
 
   const handleGenerateLabel = () => {
@@ -124,8 +134,16 @@ export default function TraceSmartPage() {
     }
   };
 
-  const isProcessingAnyProduct = processStatus === 'ai_validating';
+  const isNextProductDisabled = processStatus === 'ai_validating' || productQueue.length === 0;
 
+  if (isLoadingAuth || !isLoggedIn) {
+    return (
+      <div className="flex flex-col min-h-screen bg-background font-body items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="mt-4 text-muted-foreground">Loading TraceSmart...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background font-body">
@@ -137,7 +155,7 @@ export default function TraceSmartPage() {
               currentProduct={currentProduct} 
               onNextProduct={handleNextProduct}
               productQueueCount={productQueue.length}
-              isProcessing={isProcessingAnyProduct}
+              isProcessing={isNextProductDisabled}
             />
             <InspectionStation
               product={currentProduct}

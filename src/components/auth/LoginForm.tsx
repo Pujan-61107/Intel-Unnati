@@ -8,24 +8,38 @@ import { Label } from '@/components/ui/label';
 import Link from 'next/link';
 import { Mail, Lock, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    toast({
-      title: "Login Attempt",
-      description: "Login functionality is not yet implemented.",
-    });
-    // Actual login logic would go here
+    // Simulate API call for login
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // For simulation, assume login is successful
+    // In a real app, you would validate credentials here
+    if (email && password) { // Basic check
+      login(); // Call the login function from AuthContext
+      toast({
+        title: "Login Successful",
+        description: "Welcome back to TraceSmart!",
+      });
+    } else {
+      toast({
+        title: "Login Failed",
+        description: "Please check your credentials. (Simulation)",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+    }
+    // setIsLoading(false) is not strictly needed here if login() always navigates
   };
 
   return (

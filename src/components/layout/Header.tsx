@@ -1,13 +1,28 @@
-import { ScanBarcode } from 'lucide-react';
+
+"use client";
+
+import { ScanBarcode, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
 
 export default function Header() {
+  const { isLoggedIn, logout } = useAuth();
+
   return (
     <header className="bg-card border-b border-border shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex items-center">
-        <ScanBarcode className="h-8 w-8 text-primary mr-3" />
-        <h1 className="text-2xl font-headline font-bold text-primary">
-          TraceSmart
-        </h1>
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center">
+          <ScanBarcode className="h-8 w-8 text-primary mr-3" />
+          <h1 className="text-2xl font-headline font-bold text-primary">
+            TraceSmart
+          </h1>
+        </div>
+        {isLoggedIn && (
+          <Button variant="ghost" size="sm" onClick={logout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        )}
       </div>
     </header>
   );
