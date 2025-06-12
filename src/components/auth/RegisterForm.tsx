@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
 
 export default function RegisterForm() {
   const [fullName, setFullName] = useState('');
@@ -15,6 +16,7 @@ export default function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { login } = useAuth(); // Get the login function from AuthContext
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,15 +28,39 @@ export default function RegisterForm() {
       });
       return;
     }
+    if (!fullName || !email || !password) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
-    // Simulate API call
+    // Simulate API call for registration
     await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    toast({
-      title: "Registration Attempt",
-      description: "Registration functionality is not yet implemented.",
-    });
-    // Actual registration logic would go here
+
+    // For simulation, assume registration is successful
+    // In a real app, you would handle API response here
+    try {
+      // Simulate successful registration
+      login(); // Log the user in using the AuthContext's login function
+      toast({
+        title: "Registration Successful!",
+        description: "Welcome to TraceSmart! You are now logged in.",
+      });
+      // The login() function in AuthContext handles redirection to '/'
+      // No need to setIsLoading(false) here as login() will redirect.
+    } catch (error) {
+      // Simulate a registration error
+      toast({
+        title: "Registration Failed",
+        description: "Something went wrong. Please try again. (Simulation)",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
