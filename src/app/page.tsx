@@ -19,7 +19,7 @@ const initialProducts: Product[] = [
   { id: 'p1', deviceId: 'DEV001', batchId: 'BATCH-A1', manufacturingDate: '2024-07-15', rohsCompliant: true, serialNumber: 'SN-TRSMT-001' },
   { id: 'p2', deviceId: 'DEV002', batchId: 'BATCH-A2', manufacturingDate: '2024-07-16', rohsCompliant: false, serialNumber: 'SN-TRSMT-002' },
   { id: 'p3', deviceId: 'DEV003', batchId: 'BATCH-B1', manufacturingDate: '2024-07-17', rohsCompliant: true, serialNumber: 'SN-TRSMT-003' },
-  { id: 'p4', deviceId: 'DEV004', batchId: 'BATCH-B2', manufacturingDate: '2024-07-18', rohsCompliant: true, serialNumber: 'SN-TRSMT-004', labelImageUrl: 'https://placehold.co/300x150.png' },
+  { id: 'p4', deviceId: 'DEV004', batchId: 'BATCH-B2', manufacturingDate: '2024-07-18', rohsCompliant: true, serialNumber: 'SN-TRSMT-004', labelImageUrl: 'https://placehold.co/300x150.png/.webp?text=DeviceID:DEV004%5CnBatchID:BATCH-B2%5CnMfgDate:2024-07-18%5CnRoHS:Yes%5CnSN:SN-TRSMT-004-INVALID' }, // Example of a potentially problematic label for AI to catch
   { id: 'p5', deviceId: 'DEV005', batchId: 'BATCH-C1', manufacturingDate: '2024-07-19', rohsCompliant: true, serialNumber: 'SN-TRSMT-005' },
 ];
 
@@ -46,17 +46,17 @@ export default function TraceSmartPage() {
   }, []);
 
   const handleNextProduct = useCallback(() => {
+    if (processStatus === 'ai_validating') {
+      addLog("Cannot load next product: AI Validation in progress.", 'error');
+      toast({ title: "Processing Error", description: "Wait for AI validation to complete.", variant: "destructive" });
+      return;
+    }
+
     if (productQueue.length === 0) {
       addLog("Product queue is empty.", 'info');
       toast({ title: "Queue Empty", description: "No more products to process." });
       setCurrentProduct(null);
       setProcessStatus('idle');
-      return;
-    }
-
-    if (processStatus === 'ai_validating') {
-      addLog("Cannot load next product: AI Validation in progress for current product.", 'error');
-      toast({ title: "Processing Error", description: "Wait for AI validation to complete before loading the next product.", variant: "destructive" });
       return;
     }
     
@@ -66,13 +66,15 @@ export default function TraceSmartPage() {
     setAiValidationResult(null);
     setProcessStatus('inspecting');
     addLog(`Product ${nextProduct.deviceId} (SN: ${nextProduct.serialNumber}) moved to inspection.`, 'info');
-  }, [productQueue, addLog, toast, processStatus]);
+  }, [productQueue, addLog, toast, processStatus]); // processStatus added
 
   useEffect(() => {
+    // Automatically load the first product if queue is not empty, no current product, and user is logged in.
+    // And not currently in an AI validation state.
     if (isLoggedIn && !currentProduct && productQueue.length > 0 && processStatus !== 'ai_validating') {
       handleNextProduct();
     }
-  }, [isLoggedIn, currentProduct, productQueue.length, processStatus, handleNextProduct]);
+  }, [isLoggedIn, currentProduct, productQueue, processStatus, handleNextProduct]); // productQueue and processStatus added
 
 
   const handleGenerateLabel = () => {
@@ -91,7 +93,7 @@ export default function TraceSmartPage() {
     
     setCurrentProduct(prev => prev ? { ...prev, labelImageUrl } : null);
     setProcessStatus('label_generated');
-    addLog(`Label generated for ${currentProduct.deviceId}.`, 'success');
+    addLog(`Label generated for ${currentProduct.deviceId} (SN: ${currentProduct.serialNumber}).`, 'success');
     toast({ title: "Label Generated", description: `Simulated label created for ${currentProduct.deviceId}.` });
   };
 
@@ -100,7 +102,7 @@ export default function TraceSmartPage() {
 
     setIsLoadingAi(true);
     setProcessStatus('ai_validating');
-    addLog(`AI label validation started for ${currentProduct.deviceId}...`, 'ai');
+    addLog(`AI label validation started for ${currentProduct.deviceId} (SN: ${currentProduct.serialNumber})...`, 'ai');
     toast({ title: "AI Validation", description: "Sending label for AI validation..." });
 
     const aiInput: ValidateLabelQualityInput = {
@@ -109,23 +111,24 @@ export default function TraceSmartPage() {
       batchId: currentProduct.batchId,
       manufacturingDate: currentProduct.manufacturingDate,
       rohsCompliance: currentProduct.rohsCompliant,
+      serialNumber: currentProduct.serialNumber, // Added serial number
     };
 
     try {
       const result = await validateLabelQuality(aiInput);
       setAiValidationResult({ isValid: result.isValid, validationMessage: result.validationResult });
       if (result.isValid) {
-        addLog(`AI Validation Passed for ${currentProduct.deviceId}: ${result.validationResult}`, 'success');
+        addLog(`AI Validation Passed for ${currentProduct.deviceId} (SN: ${currentProduct.serialNumber}): ${result.validationResult}`, 'success');
         setProcessStatus('validation_complete_accepted');
         toast({ title: "AI Validation Passed", description: result.validationResult, variant: "default" });
       } else {
-        addLog(`AI Validation Failed for ${currentProduct.deviceId}: ${result.validationResult}`, 'error');
+        addLog(`AI Validation Failed for ${currentProduct.deviceId} (SN: ${currentProduct.serialNumber}): ${result.validationResult}`, 'error');
         setProcessStatus('validation_complete_rejected');
         toast({ title: "AI Validation Failed", description: result.validationResult, variant: "destructive" });
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown AI validation error";
-      addLog(`AI validation error for ${currentProduct.deviceId}: ${errorMessage}`, 'error');
+      addLog(`AI validation error for ${currentProduct.deviceId} (SN: ${currentProduct.serialNumber}): ${errorMessage}`, 'error');
       setAiValidationResult({ isValid: false, validationMessage: `Error: ${errorMessage}` });
       setProcessStatus('validation_complete_rejected'); 
       toast({ title: "AI Error", description: `Validation failed: ${errorMessage}`, variant: "destructive" });
@@ -134,7 +137,7 @@ export default function TraceSmartPage() {
     }
   };
 
-  const isNextProductDisabled = processStatus === 'ai_validating' || productQueue.length === 0;
+  const isNextProductDisabled = processStatus === 'ai_validating'; // Simplified: only disable if AI is actively validating
 
   if (isLoadingAuth || !isLoggedIn) {
     return (
@@ -155,7 +158,7 @@ export default function TraceSmartPage() {
               currentProduct={currentProduct} 
               onNextProduct={handleNextProduct}
               productQueueCount={productQueue.length}
-              isProcessing={isNextProductDisabled}
+              isProcessing={isNextProductDisabled || productQueue.length === 0} // Disable if AI validating OR queue empty
             />
             <InspectionStation
               product={currentProduct}
