@@ -18,20 +18,55 @@ export default function RegisterForm() {
   const { toast } = useToast();
   const { login } = useAuth(); // Get the login function from AuthContext
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value.toLowerCase());
+  };
+
+  const validatePassword = (password: string): { isValid: boolean; message?: string } => {
+    if (password.length < 8) {
+      return { isValid: false, message: "Password must be at least 8 characters long." };
+    }
+    if (!/[A-Z]/.test(password)) {
+      return { isValid: false, message: "Password must include at least one uppercase letter." };
+    }
+    if (!/[a-z]/.test(password)) {
+      return { isValid: false, message: "Password must include at least one lowercase letter." };
+    }
+    if (!/[0-9]/.test(password)) {
+      return { isValid: false, message: "Password must include at least one number." };
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      return { isValid: false, message: "Password must include at least one special character (e.g., !@#$%^&*)." };
+    }
+    return { isValid: true };
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    
+    if (!fullName || !email || !password || !confirmPassword) {
       toast({
         title: "Error",
-        description: "Passwords do not match.",
+        description: "Please fill in all fields.",
         variant: "destructive",
       });
       return;
     }
-    if (!fullName || !email || !password) {
+
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      toast({
+        title: "Password Error",
+        description: passwordValidation.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
       toast({
         title: "Error",
-        description: "Please fill in all fields.",
+        description: "Passwords do not match.",
         variant: "destructive",
       });
       return;
@@ -89,7 +124,7 @@ export default function RegisterForm() {
             type="email"
             placeholder="you@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
             className="pl-10"
           />
@@ -107,8 +142,12 @@ export default function RegisterForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
             className="pl-10"
+            aria-describedby="password-requirements"
           />
         </div>
+        <p id="password-requirements" className="text-xs text-muted-foreground mt-1 px-1">
+          Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char (e.g., !@#$%^&*).
+        </p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="confirmPassword">Confirm Password</Label>
