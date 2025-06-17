@@ -16,13 +16,13 @@
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%; /* Neon Green will be set in dark theme */
-    --accent-foreground: 222.2 47.4% 11.2%; /* Dark text for Neon Green */
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%; /* Will be defined for dark theme */
-    --ring: 222.2 84% 4.9%; /* Electric Blue for focus rings in dark theme */
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -32,38 +32,34 @@
   }
 
   .dark {
-    /* PRD Colors:
-       Primary color: Electric blue (#7DF9FF) -> HSL approx 195, 100%, 74%
-       Background color: Dark navy blue (#1A237E) -> HSL approx 232, 65%, 29% (adjusting from image)
-       Accent color: Neon green (#39FF14) -> HSL approx 109, 100%, 53%
-    */
-    --background: 232 65% 18%; /* Dark Navy Blue - Page BG (deeper than card to match image style) */
-    --foreground: 0 0% 98%; /* Bright White Text */
+    /* Colorful Dark Theme */
+    --background: 220 10% 12%; /* Deep Cool Gray/Charcoal */
+    --foreground: 0 0% 95%; /* Off-white */
 
-    --card: 232 60% 22%; /* Slightly Lighter Dark Blue - Card BG (matching image style) */
-    --card-foreground: 0 0% 98%;
+    --card: 220 10% 18%; /* Slightly lighter gray for cards */
+    --card-foreground: 0 0% 95%;
 
-    --popover: 230 50% 25%; /* Darker Blue for Popovers */
-    --popover-foreground: 0 0% 98%;
+    --popover: 220 10% 15%; /* Popover background */
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 195 100% 74%; /* Electric Blue (Button/Links - PRD) */
-    --primary-foreground: 232 60% 10%; /* Dark Navy/Blue (Text on Primary Button for contrast) */
+    --primary: 170 70% 45%; /* Vibrant Teal */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
 
-    --secondary: 225 40% 30%; /* Muted Dark Blue for secondary elements */
-    --secondary-foreground: 0 0% 90%; /* Light text for secondary elements */
+    --secondary: 210 50% 55%; /* Muted Blue */
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 230 30% 35%; /* Muted elements BG */
-    --muted-foreground: 230 25% 70%; /* Muted text (e.g., 'Enter your credentials') */
+    --muted: 220 10% 25%; /* Muted elements background */
+    --muted-foreground: 220 5% 65%; /* Muted text */
 
-    --accent: 109 100% 53%; /* Neon Green (PRD Accent) */
-    --accent-foreground: 240 10% 10%; /* Dark text for contrast on Neon Green */
+    --accent: 320 70% 55%; /* Bright Magenta/Pink */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
 
-    --destructive: 0 70% 55%; /* Vivid Red for destructive actions */
-    --destructive-foreground: 0 0% 98%; /* Light text for destructive elements */
+    --destructive: 0 70% 50%; /* Vivid Red for destructive actions */
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 230 40% 28%; /* Border - subtle, slightly lighter than card */
-    --input: 232 60% 15%;  /* Input BG - Darker than card, but lighter than main BG for depth */
-    --ring: 195 100% 65%; /* Focus Ring (Slightly darker Electric Blue for better visibility as ring) */
+    --border: 220 10% 30%; /* Border for elements */
+    --input: 220 10% 10%;  /* Input background - darker */
+    --ring: 170 70% 55%; /* Ring color - Teal to match primary */
   }
 }
 
