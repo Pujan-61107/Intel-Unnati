@@ -32,25 +32,33 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%; /* Very Dark Cool Background */
-    --foreground: 0 0% 98%; /* Bright White/Off-White Text */
-    --card: 240 8% 10%; /* Slightly Lighter Dark Card */
+    --background: 232 65% 29%; /* Dark Navy Blue (Image Page BG) */
+    --foreground: 0 0% 98%; /* Bright White Text */
+
+    --card: 230 40% 18%; /* Dark Blue (Image Card BG) */
     --card-foreground: 0 0% 98%;
-    --popover: 240 8% 10%;
+
+    --popover: 230 40% 15%; /* Darker Blue for Popovers */
     --popover-foreground: 0 0% 98%;
-    --primary: 210 100% 56%; /* Vibrant Blue */
-    --primary-foreground: 210 40% 98%; /* Bright White for contrast on primary */
-    --secondary: 240 5% 15%; /* Darker Secondary */
-    --secondary-foreground: 0 0% 90%;
-    --muted: 240 4% 12%; /* Dark Muted */
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 320 100% 60%; /* Bright Pink/Magenta */
-    --accent-foreground: 0 0% 98%; /* Bright White for contrast on accent */
-    --destructive: 0 70% 50%; /* Vivid Red */
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5% 20%; /* Dark Border */
-    --input: 240 5% 18%; /* Dark Input Background */
-    --ring: 210 100% 66%; /* Brighter Blue for Ring */
+
+    --primary: 195 100% 74%; /* Electric Blue (Image Button/Links) */
+    --primary-foreground: 232 60% 20%; /* Dark Navy/Blue (Text on Primary Button for contrast) */
+
+    --secondary: 225 30% 25%; /* Muted Dark Blue for secondary elements */
+    --secondary-foreground: 0 0% 90%; /* Light text for secondary elements */
+
+    --muted: 230 20% 30%; 
+    --muted-foreground: 230 25% 70%; /* Muted text (e.g., 'Enter your credentials', 'Don't have an account?') */
+
+    --accent: 109 100% 55%; /* Neon Green (PRD Accent) */
+    --accent-foreground: 240 10% 10%; /* Dark text for contrast on Neon Green */
+
+    --destructive: 0 63% 50%; /* Standard Destructive Red */
+    --destructive-foreground: 0 0% 98%; /* Light text for destructive elements */
+
+    --border: 230 35% 22%; /* Input borders - slightly darker/more subtle than input bg for definition */
+    --input: 230 35% 12%; /* Darker Blue (Image Input BG - darker than card) */
+    --ring: 195 100% 65%; /* Focus Ring (Slightly darker Electric Blue for better visibility as ring) */
   }
 }
 
