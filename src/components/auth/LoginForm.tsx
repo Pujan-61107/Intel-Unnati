@@ -10,6 +10,9 @@ import { Mail, Lock, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
+// Simulate a "correct" password for demonstration
+const SIMULATED_CORRECT_PASSWORD = "password123";
+
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,27 +23,35 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    
     // Simulate API call for login
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // For simulation, assume login is successful
-    // In a real app, you would validate credentials here
-    if (email && password) { // Basic check
+    // For simulation, check against the hardcoded password
+    if (email && password === SIMULATED_CORRECT_PASSWORD) { 
       const userName = email.split('@')[0]; // Use email part as username for simulation
       login(userName); 
       toast({
         title: "Login Successful",
         description: "Welcome back to TraceSmart!",
       });
-    } else {
-      toast({
+      // setIsLoading(false) is not strictly needed here if login() always navigates
+    } else if (email && password) { // Email provided, but password incorrect
+       toast({
         title: "Login Failed",
-        description: "Please check your credentials. (Simulation)",
+        description: "Incorrect email or password. Please try again. (Hint: try password 'password123' for simulation)",
         variant: "destructive",
       });
       setIsLoading(false);
     }
-    // setIsLoading(false) is not strictly needed here if login() always navigates
+     else { // Email or password field empty
+      toast({
+        title: "Login Failed",
+        description: "Please enter both email and password.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
