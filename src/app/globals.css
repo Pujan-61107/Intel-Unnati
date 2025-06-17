@@ -32,23 +32,23 @@
   }
 
   .dark {
-    --background: 232 65% 29%; /* Dark Navy Blue (Image Page BG) */
+    --background: 232 60% 10%; /* Even Darker Navy Blue (Page BG) */
     --foreground: 0 0% 98%; /* Bright White Text */
 
-    --card: 230 40% 18%; /* Dark Blue (Image Card BG) */
+    --card: 230 45% 15%; /* Dark Blue (Card BG - darker than before, distinct from BG) */
     --card-foreground: 0 0% 98%;
 
-    --popover: 230 40% 15%; /* Darker Blue for Popovers */
+    --popover: 230 40% 12%; /* Darker Blue for Popovers */
     --popover-foreground: 0 0% 98%;
 
-    --primary: 195 100% 74%; /* Electric Blue (Image Button/Links) */
+    --primary: 195 100% 74%; /* Electric Blue (Button/Links - PRD) */
     --primary-foreground: 232 60% 20%; /* Dark Navy/Blue (Text on Primary Button for contrast) */
 
-    --secondary: 225 30% 25%; /* Muted Dark Blue for secondary elements */
+    --secondary: 225 30% 20%; /* Muted Dark Blue for secondary elements - darker */
     --secondary-foreground: 0 0% 90%; /* Light text for secondary elements */
 
-    --muted: 230 20% 30%; 
-    --muted-foreground: 230 25% 70%; /* Muted text (e.g., 'Enter your credentials', 'Don't have an account?') */
+    --muted: 230 20% 25%; /* Muted elements BG - darker */
+    --muted-foreground: 230 25% 65%; /* Muted text (e.g., 'Enter your credentials') - slightly less bright */
 
     --accent: 109 100% 55%; /* Neon Green (PRD Accent) */
     --accent-foreground: 240 10% 10%; /* Dark text for contrast on Neon Green */
@@ -56,8 +56,8 @@
     --destructive: 0 63% 50%; /* Standard Destructive Red */
     --destructive-foreground: 0 0% 98%; /* Light text for destructive elements */
 
-    --border: 230 35% 22%; /* Input borders - slightly darker/more subtle than input bg for definition */
-    --input: 230 35% 12%; /* Darker Blue (Image Input BG - darker than card) */
+    --border: 230 30% 18%; /* Border - darker */
+    --input: 230 35% 10%; /* Input BG - very dark, darker than card */
     --ring: 195 100% 65%; /* Focus Ring (Slightly darker Electric Blue for better visibility as ring) */
   }
 }
