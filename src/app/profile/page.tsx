@@ -36,7 +36,7 @@ export default function ProfilePage() {
           <CardHeader className="text-center">
             <UserCircle2 className="h-16 w-16 text-primary mx-auto mb-4" />
             <CardTitle className="text-2xl font-bold tracking-tight">User Profile</CardTitle>
-            <CardDescription>Your registration details.</CardDescription>
+            <CardDescription>Below are the full name and email address you provided during account registration.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
