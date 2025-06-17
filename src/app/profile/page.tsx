@@ -5,8 +5,9 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Loader2, User, Mail } from 'lucide-react';
+import { Loader2, User, Mail, UserCircle2 } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import { Label } from "@/components/ui/label";
 
 export default function ProfilePage() {
   const { isLoggedIn, isLoadingAuth, currentUser } = useAuth();
@@ -63,9 +64,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-// Need to import Label and UserCircle2 if they are not globally available or from ui/card
-// For UserCircle2, assuming it's a lucide icon:
-import { UserCircle2 as LucideUserCircle2 } from 'lucide-react'; // For CardHeader icon if needed
-// Re-using Label from ui/label
-import { Label } from "@/components/ui/label";
