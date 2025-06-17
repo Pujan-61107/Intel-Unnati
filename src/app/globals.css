@@ -32,34 +32,34 @@
   }
 
   .dark {
-    /* TraceSmart Theme - Cyberpunk/Vibrant Dark adjustments */
-    --background: 250 30% 10%; /* Very Dark Indigo/almost Black */
-    --foreground: 210 35% 95%; /* Lighter Off-white for strong contrast */
+    /* TraceSmart Theme - Brighter Dark Theme */
+    --background: 240 20% 15%; /* Lighter dark blue-grey */
+    --foreground: 210 40% 98%; /* Very bright off-white */
 
-    --card: 250 30% 18%; /* Dark Indigo, slightly lighter than BG */
-    --card-foreground: 210 35% 95%;
+    --card: 240 20% 22%; /* Darker card, complementing BG */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 250 30% 15%; /* Similar to card */
-    --popover-foreground: 210 35% 95%;
+    --popover: 240 20% 20%; /* Popover similar to card */
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 181 100% 68%; /* Electric Cyan/Blue - slightly adjusted for pop */
-    --primary-foreground: 220 60% 10%; /* Very Dark Blue for text on primary */
+    --primary: 190 100% 60%; /* Bright, saturated Cyan/Blue */
+    --primary-foreground: 190 100% 10%; /* Dark, highly saturated for text on primary */
 
-    --secondary: 220 70% 55%; /* Bright Secondary Blue */
-    --secondary-foreground: 210 35% 95%; /* Text on secondary elements */
+    --secondary: 210 80% 60%; /* Brighter, saturated secondary blue */
+    --secondary-foreground: 210 30% 15%; /* Dark text on secondary */
 
-    --muted: 250 25% 35%; /* Muted Indigo */
-    --muted-foreground: 210 25% 75%; /* Lighter muted text */
+    --muted: 240 15% 30%; /* Muted, but slightly lighter */
+    --muted-foreground: 210 25% 80%; /* Lighter muted text */
 
-    --accent: 100 100% 53%; /* Super Bright Neon Yellow-Green */
-    --accent-foreground: 100 100% 5%; /* Almost Black for text on accent */
+    --accent: 70 100% 58%; /* Vibrant Lime/Yellow-Green */
+    --accent-foreground: 70 100% 5%; /* Almost Black for text on accent */
     
-    --destructive: 0 85% 55%; /* Vibrant Red */
+    --destructive: 0 90% 60%; /* Vibrant, bright Red */
     --destructive-foreground: 0 0% 100%; /* White text on destructive */
 
-    --border: 250 30% 30%; /* More visible border in the new scheme */
-    --input: 181 90% 65%; /* Vibrant input border matching primary theme */
-    --ring: 181 100% 68%; /* Focus ring color (Matches primary) */
+    --border: 240 20% 35%; /* More visible border */
+    --input: 190 90% 70%; /* Brighter input border, matching primary's brightness */
+    --ring: 190 100% 60%; /* Focus ring color (Matches primary) */
   }
 }
 
