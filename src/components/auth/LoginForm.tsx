@@ -26,7 +26,8 @@ export default function LoginForm() {
     // For simulation, assume login is successful
     // In a real app, you would validate credentials here
     if (email && password) { // Basic check
-      login(); // Call the login function from AuthContext
+      const userName = email.split('@')[0]; // Use email part as username for simulation
+      login(userName); 
       toast({
         title: "Login Successful",
         description: "Welcome back to TraceSmart!",

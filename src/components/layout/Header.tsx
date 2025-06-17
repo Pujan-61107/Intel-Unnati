@@ -1,12 +1,12 @@
 
 "use client";
 
-import { ScanBarcode, LogOut } from 'lucide-react';
+import { ScanBarcode, LogOut, UserCircle2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 
 export default function Header() {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, userName } = useAuth();
 
   return (
     <header className="bg-card border-b border-border shadow-md sticky top-0 z-50">
@@ -18,10 +18,20 @@ export default function Header() {
           </h1>
         </div>
         {isLoggedIn && (
-          <Button variant="ghost" size="sm" onClick={logout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </Button>
+          <div className="flex items-center gap-4">
+            {userName && (
+              <div className="flex items-center text-sm text-muted-foreground">
+                <UserCircle2 className="h-5 w-5 mr-2 text-primary" />
+                <span>
+                  Welcome back, <span className="font-semibold text-foreground">{userName}</span>
+                </span>
+              </div>
+            )}
+            <Button variant="ghost" size="sm" onClick={logout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </Button>
+          </div>
         )}
       </div>
     </header>

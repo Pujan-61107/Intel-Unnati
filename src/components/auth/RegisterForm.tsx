@@ -80,7 +80,7 @@ export default function RegisterForm() {
     // In a real app, you would handle API response here
     try {
       // Simulate successful registration
-      login(); // Log the user in using the AuthContext's login function
+      login(fullName); // Log the user in using the AuthContext's login function and pass fullName
       toast({
         title: "Registration Successful!",
         description: "Welcome to TraceSmart! You are now logged in.",
