@@ -42,26 +42,35 @@ export default function ConveyorBelt({ currentProduct, onNextProduct, productQue
           </div>
 
           {/* Inspection Zone */}
-          <div className="flex-1 flex justify-center items-center min-h-[150px] border-2 border-dashed border-border rounded-lg p-4 bg-background shadow-inner relative">
+          <div className="flex-1 flex justify-center items-center min-h-[180px] border-2 border-dashed border-border rounded-lg p-4 bg-background shadow-inner relative overflow-hidden">
+            {/* Animated Belt Surface */}
+            <div 
+              className="absolute inset-0 w-full h-full animate-conveyor-stripes-flow opacity-20"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(45deg, hsl(var(--primary) / 0.5), hsl(var(--primary) / 0.5) 10px, transparent 10px, transparent 20px)',
+                backgroundSize: '40px 40px',
+              }}
+            />
+            
             {currentProduct ? (
-              <div className="text-center animate-fadeIn">
+              <div className="text-center animate-fadeIn relative z-10"> {/* Ensure product is above belt animation */}
                 <Image 
-                  src="https://placehold.co/100x80.png" // Generic product box image
+                  src="https://placehold.co/100x80.png" 
                   alt="Product" 
                   width={100} 
                   height={80} 
-                  className="mx-auto mb-2 rounded"
+                  className="mx-auto mb-2 rounded shadow-md"
                   data-ai-hint="electronic device"
                 />
                 <p className="font-semibold text-primary">{currentProduct.deviceId}</p>
                 <p className="text-xs text-muted-foreground">Arrived for inspection</p>
               </div>
             ) : (
-              <p className="text-muted-foreground">Inspection zone empty</p>
+              <p className="text-muted-foreground relative z-10">Inspection zone empty</p>
             )}
-            {/* Animated Chevrons indicating movement */}
-             <ChevronRight className="absolute left-[-20px] top-1/2 -translate-y-1/2 h-8 w-8 text-primary opacity-50 animate-ping [animation-duration:2s]" />
-             <ChevronRight className="absolute right-[-20px] top-1/2 -translate-y-1/2 h-8 w-8 text-primary opacity-50" />
+            {/* Static Chevrons indicating movement direction (less obtrusive now) */}
+             <ChevronRight className="absolute left-1 top-1/2 -translate-y-1/2 h-6 w-6 text-primary/30 z-0" />
+             <ChevronRight className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-primary/30 z-0" />
           </div>
         </div>
         

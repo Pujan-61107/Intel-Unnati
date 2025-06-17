@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { Product, ValidationResult, ProcessStatus } from '@/lib/types';
@@ -57,7 +56,7 @@ export default function InspectionStation({
       <CardContent className="p-6 space-y-6">
         {product ? (
           <>
-            <div>
+            <div className="animate-fadeIn">
               <h3 className="text-md font-semibold mb-2 text-primary font-headline">Product Details:</h3>
               <ul className="space-y-1 text-sm">
                 <li className="flex items-center"><Cpu className="mr-2 h-4 w-4 text-muted-foreground" />Device ID: <span className="font-medium ml-1">{product.deviceId}</span></li>
@@ -72,16 +71,18 @@ export default function InspectionStation({
             </div>
 
             {product.labelImageUrl && (
-              <div className="border p-4 rounded-lg bg-background">
-                 <h3 className="text-md font-semibold mb-2 text-primary font-headline">Generated Label Preview:</h3>
-                <Image 
-                  src={product.labelImageUrl} 
-                  alt="Simulated Product Label" 
-                  width={300} 
-                  height={150} 
-                  className="rounded-md border shadow-sm mx-auto"
-                  data-ai-hint="product label" 
-                />
+              <div className="border p-1 rounded-md bg-slate-100 dark:bg-slate-800 shadow-lg animate-fadeIn">
+                 <h3 className="text-sm font-semibold mb-2 text-primary/80 dark:text-primary/90 px-2 pt-1 font-headline">Generated Label Preview:</h3>
+                <div className="bg-white p-2 rounded-sm shadow-inner overflow-hidden">
+                  <Image 
+                    src={product.labelImageUrl} 
+                    alt="Simulated Product Label" 
+                    width={300} 
+                    height={150} 
+                    className="rounded-xs mx-auto"
+                    data-ai-hint="product label" 
+                  />
+                </div>
               </div>
             )}
             
@@ -105,7 +106,7 @@ export default function InspectionStation({
             </div>
 
             {aiValidationResult && (processStatus === 'validation_complete_accepted' || processStatus === 'validation_complete_rejected') && (
-              <div className={`p-4 rounded-md border ${aiValidationResult.isValid ? 'bg-accent/10 border-accent' : 'bg-destructive/10 border-destructive'}`}>
+              <div className={`p-4 rounded-md border animate-fadeIn ${aiValidationResult.isValid ? 'bg-accent/10 border-accent' : 'bg-destructive/10 border-destructive'}`}>
                 <h4 className="font-semibold flex items-center mb-1">
                   {aiValidationResult.isValid ? <CheckCircle2 className="mr-2 h-5 w-5 text-accent" /> : <XCircle className="mr-2 h-5 w-5 text-destructive" />}
                   AI Validation: <span className={aiValidationResult.isValid ? 'text-accent' : 'text-destructive'}>{aiValidationResult.isValid ? 'Passed' : 'Failed'}</span>
@@ -115,7 +116,7 @@ export default function InspectionStation({
             )}
           </>
         ) : (
-          <div className="text-center py-10">
+          <div className="text-center py-10 animate-fadeIn">
             <Package className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground">No product at inspection station.</p>
             <p className="text-sm text-muted-foreground">Load a product using the conveyor controls.</p>
