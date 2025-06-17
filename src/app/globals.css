@@ -32,33 +32,34 @@
   }
 
   .dark {
-    --background: 236 65% 30%; /* Dark Navy Blue */
-    --foreground: 210 40% 98%; /* Light text */
+    /* TraceSmart Theme from Image & Guidelines */
+    --background: 232 65% 29%; /* Dark Navy Blue #1A237E (Page background) */
+    --foreground: 200 30% 96%; /* Very light grey/off-white for general text */
 
-    --card: 236 55% 28%; /* Slightly darker/richer navy */
-    --card-foreground: 210 40% 98%;
+    --card: 232 60% 34%; /* Card background: slightly lighter & desaturated than page bg */
+    --card-foreground: 200 30% 96%; /* Text on card */
 
-    --popover: 236 50% 25%; /* Even darker for popovers */
-    --popover-foreground: 210 40% 98%;
+    --popover: 232 55% 28%; /* Popover background */
+    --popover-foreground: 200 30% 96%; /* Text on popover */
 
-    --primary: 210 100% 70%; /* Brighter, appealing blue */
-    --primary-foreground: 210 100% 10%; /* Deep blue for contrast */
+    --primary: 181 100% 74%; /* Electric Blue #7DF9FF (for buttons, links, icons) */
+    --primary-foreground: 232 70% 20%; /* Dark blue text for on primary elements */
 
-    --secondary: 236 45% 38%; /* Subtle, darker navy for secondary */
-    --secondary-foreground: 210 30% 90%; /* Slightly dimmer light text */
+    --secondary: 232 50% 42%; /* Secondary elements background */
+    --secondary-foreground: 200 25% 90%; /* Text on secondary elements */
 
-    --muted: 236 40% 45%; /* Muted navy */
-    --muted-foreground: 220 20% 70%; /* Adjusted muted text */
+    --muted: 232 45% 48%; /* Muted elements background */
+    --muted-foreground: 210 25% 75%; /* Muted text */
 
-    --accent: 45 100% 60%; /* Vibrant gold/yellow */
-    --accent-foreground: 45 100% 10%; /* Dark brown/gold for contrast */
+    --accent: 110 100% 54%; /* Neon Green #39FF14 (as per style guide) */
+    --accent-foreground: 110 100% 15%; /* Dark green for text on neon green */
     
-    --destructive: 0 75% 60%; /* More saturated red */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 55%; /* Destructive actions (e.g., errors) */
+    --destructive-foreground: 0 0% 98%; /* Text on destructive elements */
 
-    --border: 236 40% 40%; /* Slightly darker border */
-    --input: 236 40% 40%; /* Matching input background */
-    --ring: 210 100% 70%; /* Matching new primary */
+    --border: 232 50% 38%; /* Default border for Card. Slightly lighter than card bg. */
+    --input: 190 70% 60%; /* Border color for Input fields (lighter cyan/blue). Input BG will be page BG. */
+    --ring: 181 100% 74%; /* Focus ring color (Electric Blue, same as primary) */
   }
 }
 
