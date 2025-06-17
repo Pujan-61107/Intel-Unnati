@@ -9,6 +9,14 @@ import { Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
 
+const USERS_STORAGE_KEY = 'traceSmartUsers'; // Key for localStorage
+
+interface StoredUser {
+  fullName: string;
+  email: string;
+  password_unsafe: string; // Storing password unsafely for simulation ONLY
+}
+
 export default function RegisterForm() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -16,26 +24,26 @@ export default function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { login } = useAuth(); // Get the login function from AuthContext
+  const { login } = useAuth();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value.toLowerCase());
   };
 
-  const validatePassword = (password: string): { isValid: boolean; message?: string } => {
-    if (password.length < 8) {
+  const validatePassword = (passwordToValidate: string): { isValid: boolean; message?: string } => {
+    if (passwordToValidate.length < 8) {
       return { isValid: false, message: "Password must be at least 8 characters long." };
     }
-    if (!/[A-Z]/.test(password)) {
+    if (!/[A-Z]/.test(passwordToValidate)) {
       return { isValid: false, message: "Password must include at least one uppercase letter." };
     }
-    if (!/[a-z]/.test(password)) {
+    if (!/[a-z]/.test(passwordToValidate)) {
       return { isValid: false, message: "Password must include at least one lowercase letter." };
     }
-    if (!/[0-9]/.test(password)) {
+    if (!/[0-9]/.test(passwordToValidate)) {
       return { isValid: false, message: "Password must include at least one number." };
     }
-    if (!/[!@#$%^&*]/.test(password)) {
+    if (!/[!@#$%^&*]/.test(passwordToValidate)) {
       return { isValid: false, message: "Password must include at least one special character (e.g., !@#$%^&*)." };
     }
     return { isValid: true };
@@ -73,22 +81,36 @@ export default function RegisterForm() {
     }
 
     setIsLoading(true);
-    // Simulate API call for registration
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
 
-    // For simulation, assume registration is successful
-    // In a real app, you would handle API response here
     try {
-      // Simulate successful registration
-      login(fullName); // Log the user in using the AuthContext's login function and pass fullName
+      let users: StoredUser[] = [];
+      const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+      if (storedUsers) {
+        users = JSON.parse(storedUsers);
+      }
+
+      if (users.find(user => user.email === email)) {
+        toast({
+          title: "Registration Failed",
+          description: "This email address is already registered.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Add new user - UNSAFE password storage for simulation only
+      users.push({ fullName, email, password_unsafe: password });
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+
+      login(fullName); // Log the user in
       toast({
         title: "Registration Successful!",
         description: "Welcome to TraceSmart! You are now logged in.",
       });
-      // The login() function in AuthContext handles redirection to '/'
-      // No need to setIsLoading(false) here as login() will redirect.
+      // login() handles redirection
     } catch (error) {
-      // Simulate a registration error
       toast({
         title: "Registration Failed",
         description: "Something went wrong. Please try again. (Simulation)",

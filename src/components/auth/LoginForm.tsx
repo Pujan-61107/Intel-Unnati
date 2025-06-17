@@ -10,8 +10,13 @@ import { Mail, Lock, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Simulate a "correct" password for demonstration
-const SIMULATED_CORRECT_PASSWORD = "password123";
+const USERS_STORAGE_KEY = 'traceSmartUsers'; // Key for localStorage
+
+interface StoredUser {
+  fullName: string;
+  email: string;
+  password_unsafe: string; // Storing password unsafely for simulation ONLY
+}
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -24,30 +29,52 @@ export default function LoginForm() {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call for login
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
     
-    // For simulation, check against the hardcoded password
-    if (email && password === SIMULATED_CORRECT_PASSWORD) { 
-      const userName = email.split('@')[0]; // Use email part as username for simulation
-      login(userName); 
+    try {
+      const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+      if (!storedUsers) {
+        toast({
+          title: "Login Failed",
+          description: "No users registered. Please create an account. (Simulation)",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      const users: StoredUser[] = JSON.parse(storedUsers);
+      const foundUser = users.find(user => user.email === email.toLowerCase());
+
+      if (foundUser) {
+        // UNSAFE password check for simulation only
+        if (foundUser.password_unsafe === password) {
+          login(foundUser.fullName); 
+          toast({
+            title: "Login Successful",
+            description: "Welcome back to TraceSmart!",
+          });
+          // setIsLoading(false) not needed if login() always navigates
+        } else {
+          toast({
+            title: "Login Failed",
+            description: "Incorrect password. Please try again.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+        }
+      } else {
+        toast({
+          title: "Login Failed",
+          description: "Email not found. Please check your email or register.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+      }
+    } catch (error) {
       toast({
-        title: "Login Successful",
-        description: "Welcome back to TraceSmart!",
-      });
-      // setIsLoading(false) is not strictly needed here if login() always navigates
-    } else if (email && password) { // Email provided, but password incorrect
-       toast({
-        title: "Login Failed",
-        description: "Incorrect email or password. Please try again. (Hint: try password 'password123' for simulation)",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-    }
-     else { // Email or password field empty
-      toast({
-        title: "Login Failed",
-        description: "Please enter both email and password.",
+        title: "Login Error",
+        description: "An unexpected error occurred. (Simulation)",
         variant: "destructive",
       });
       setIsLoading(false);
