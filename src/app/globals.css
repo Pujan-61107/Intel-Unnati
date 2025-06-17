@@ -33,7 +33,7 @@
 
   .dark {
     /* TraceSmart Theme - More Colourful adjustments */
-    --background: 232 65% 29%; /* Dark Navy Blue (Page background) - Kept same */
+    --background: 232 55% 22%; /* Deeper Navy Blue background */
     --foreground: 200 30% 96%; /* Very light grey/off-white for general text - Kept same */
 
     --card: 232 60% 36%; /* Card background: slightly lighter & more vibrant than original */
