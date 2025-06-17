@@ -10,12 +10,12 @@ import { Mail, Lock, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
-const USERS_STORAGE_KEY = 'traceSmartUsers'; // Key for localStorage
+const USERS_STORAGE_KEY = 'traceSmartUsers'; 
 
 interface StoredUser {
   fullName: string;
   email: string;
-  password_unsafe: string; // Storing password unsafely for simulation ONLY
+  password_unsafe: string; 
 }
 
 export default function LoginForm() {
@@ -29,7 +29,7 @@ export default function LoginForm() {
     e.preventDefault();
     setIsLoading(true);
     
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000)); 
     
     try {
       const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
@@ -47,14 +47,12 @@ export default function LoginForm() {
       const foundUser = users.find(user => user.email === email.toLowerCase());
 
       if (foundUser) {
-        // UNSAFE password check for simulation only
         if (foundUser.password_unsafe === password) {
-          login(foundUser.fullName); 
+          login({ fullName: foundUser.fullName, email: foundUser.email }); 
           toast({
             title: "Login Successful",
-            description: "Welcome back to TraceSmart!",
+            description: `Welcome back, ${foundUser.fullName}!`,
           });
-          // setIsLoading(false) not needed if login() always navigates
         } else {
           toast({
             title: "Login Failed",

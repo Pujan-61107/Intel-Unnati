@@ -5,48 +5,54 @@ import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface CurrentUser {
+  fullName: string;
+  email: string;
+}
+
 interface AuthContextType {
   isLoggedIn: boolean;
   isLoadingAuth: boolean;
-  userName: string | null;
-  login: (name?: string) => void;
+  currentUser: CurrentUser | null;
+  login: (user: CurrentUser) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AUTH_STORAGE_KEY = 'traceSmartUserLoggedIn';
-const USER_NAME_STORAGE_KEY = 'traceSmartUserName';
+const AUTH_STATUS_STORAGE_KEY = 'traceSmartUserLoggedIn';
+const CURRENT_USER_DATA_STORAGE_KEY = 'traceSmartCurrentUserData';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     try {
-      const storedAuthStatus = localStorage.getItem(AUTH_STORAGE_KEY);
-      const storedUserName = localStorage.getItem(USER_NAME_STORAGE_KEY);
-      if (storedAuthStatus === 'true') {
+      const storedAuthStatus = localStorage.getItem(AUTH_STATUS_STORAGE_KEY);
+      const storedUserData = localStorage.getItem(CURRENT_USER_DATA_STORAGE_KEY);
+      
+      if (storedAuthStatus === 'true' && storedUserData) {
         setIsLoggedIn(true);
-        if (storedUserName) {
-          setUserName(storedUserName);
-        }
+        setCurrentUser(JSON.parse(storedUserData));
       }
     } catch (error) {
       console.error("Error accessing localStorage:", error);
+      // Clear potentially corrupted storage
+      localStorage.removeItem(AUTH_STATUS_STORAGE_KEY);
+      localStorage.removeItem(CURRENT_USER_DATA_STORAGE_KEY);
     }
     setIsLoadingAuth(false);
   }, []);
 
-  const login = useCallback((name?: string) => {
+  const login = useCallback((user: CurrentUser) => {
     setIsLoggedIn(true);
-    const userDisplayName = name || "User";
-    setUserName(userDisplayName);
+    setCurrentUser(user);
     try {
-      localStorage.setItem(AUTH_STORAGE_KEY, 'true');
-      localStorage.setItem(USER_NAME_STORAGE_KEY, userDisplayName);
+      localStorage.setItem(AUTH_STATUS_STORAGE_KEY, 'true');
+      localStorage.setItem(CURRENT_USER_DATA_STORAGE_KEY, JSON.stringify(user));
     } catch (error) {
       console.error("Error setting localStorage:", error);
     }
@@ -55,10 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
-    setUserName(null);
+    setCurrentUser(null);
     try {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
-      localStorage.removeItem(USER_NAME_STORAGE_KEY);
+      localStorage.removeItem(AUTH_STATUS_STORAGE_KEY);
+      localStorage.removeItem(CURRENT_USER_DATA_STORAGE_KEY);
     } catch (error) {
       console.error("Error removing localStorage item:", error);
     }
@@ -66,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoadingAuth, userName, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, isLoadingAuth, currentUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

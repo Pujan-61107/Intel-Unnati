@@ -7,14 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
+import { useAuth } from '@/contexts/AuthContext';
 
-const USERS_STORAGE_KEY = 'traceSmartUsers'; // Key for localStorage
+const USERS_STORAGE_KEY = 'traceSmartUsers';
 
 interface StoredUser {
   fullName: string;
   email: string;
-  password_unsafe: string; // Storing password unsafely for simulation ONLY
+  password_unsafe: string;
 }
 
 export default function RegisterForm() {
@@ -81,7 +81,7 @@ export default function RegisterForm() {
     }
 
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000)); 
 
     try {
       let users: StoredUser[] = [];
@@ -100,16 +100,14 @@ export default function RegisterForm() {
         return;
       }
 
-      // Add new user - UNSAFE password storage for simulation only
       users.push({ fullName, email, password_unsafe: password });
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
 
-      login(fullName); // Log the user in
+      login({ fullName, email }); 
       toast({
         title: "Registration Successful!",
         description: "Welcome to TraceSmart! You are now logged in.",
       });
-      // login() handles redirection
     } catch (error) {
       toast({
         title: "Registration Failed",
