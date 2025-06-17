@@ -32,34 +32,44 @@
   }
 
   .dark {
-    /* Attractive & Vibrant Dark Theme */
-    --background: 250 30% 12%; /* Deep Indigo/Cool Purple */
-    --foreground: 210 50% 95%; /* Bright Off-White */
+    /* New Bright & Attractive Dark Theme */
+    --background: 220 15% 10%; /* Very Dark Cool Blue/Grey */
+    --foreground: 210 40% 98%; /* Bright Off-White */
 
-    --card: 250 30% 18%; /* Slightly Lighter Indigo for cards */
-    --card-foreground: 210 50% 95%;
+    --card: 220 15% 15%; /* Slightly Lighter Dark Cool Blue/Grey */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 250 30% 15%; /* Popover similar to card base */
-    --popover-foreground: 210 50% 95%;
+    --popover: 220 15% 12%; /* Darker Popover base */
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 180 100% 45%; /* Vibrant Teal/Cyan */
-    --primary-foreground: 180 100% 5%; /* Very Dark Teal for text on primary */
+    --primary: 210 100% 56%; /* Vibrant Bright Azure/Sky Blue */
+    --primary-foreground: 210 100% 10%; /* Dark Blue text for contrast on primary */
 
-    --secondary: 220 40% 50%; /* Muted Blue, complementary */
-    --secondary-foreground: 210 50% 95%; /* Bright text on secondary */
+    --secondary: 220 10% 40%; /* Mid Cool Grey */
+    --secondary-foreground: 210 40% 98%; /* Bright text on secondary */
 
-    --muted: 250 25% 25%; /* Darker, desaturated Indigo */
-    --muted-foreground: 220 30% 70%; /* Lighter muted text */
+    --muted: 220 10% 25%; /* Darker Cool Grey */
+    --muted-foreground: 220 10% 65%; /* Lighter Cool Grey for muted text */
 
-    --accent: 30 100% 55%; /* Vibrant Orange */
-    --accent-foreground: 30 100% 5%; /* Very Dark Orange for text on accent */
+    --accent: 330 100% 60%; /* Vibrant Bright Pink/Magenta */
+    --accent-foreground: 330 100% 10%; /* Dark text for contrast on accent */
     
-    --destructive: 0 80% 55%; /* Strong, Clear Red */
+    --destructive: 0 100% 60%; /* Bright, Clear Red */
     --destructive-foreground: 0 0% 100%; /* White text on destructive */
 
-    --border: 250 30% 30%; /* Visible border, complementing background */
-    --input: 180 90% 60%; /* Input border using a lighter shade of primary */
-    --ring: 180 100% 45%; /* Focus ring color (Matches primary) */
+    --border: 220 15% 20%; /* Subtle Darker Grey Border */
+    --input: 220 15% 22%; /* Input field background/border */
+    --ring: 210 100% 56%; /* Primary color for focus rings */
+
+    /* Sidebar specific colors (can be aliased or customized further if needed) */
+    --sidebar-background: 220 15% 12%; /* Slightly different from main bg if desired */
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: var(--ring);
   }
 }
 
