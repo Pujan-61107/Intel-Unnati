@@ -32,44 +32,25 @@
   }
 
   .dark {
-    /* New Bright & Attractive Dark Theme */
-    --background: 220 15% 10%; /* Very Dark Cool Blue/Grey */
-    --foreground: 210 40% 98%; /* Bright Off-White */
-
-    --card: 220 15% 15%; /* Slightly Lighter Dark Cool Blue/Grey */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
-    --popover: 220 15% 12%; /* Darker Popover base */
+    --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
-    --primary: 210 100% 56%; /* Vibrant Bright Azure/Sky Blue */
-    --primary-foreground: 210 100% 10%; /* Dark Blue text for contrast on primary */
-
-    --secondary: 220 10% 40%; /* Mid Cool Grey */
-    --secondary-foreground: 210 40% 98%; /* Bright text on secondary */
-
-    --muted: 220 10% 25%; /* Darker Cool Grey */
-    --muted-foreground: 220 10% 65%; /* Lighter Cool Grey for muted text */
-
-    --accent: 330 100% 60%; /* Vibrant Bright Pink/Magenta */
-    --accent-foreground: 330 100% 10%; /* Dark text for contrast on accent */
-    
-    --destructive: 0 100% 60%; /* Bright, Clear Red */
-    --destructive-foreground: 0 0% 100%; /* White text on destructive */
-
-    --border: 220 15% 20%; /* Subtle Darker Grey Border */
-    --input: 220 15% 22%; /* Input field background/border */
-    --ring: 210 100% 56%; /* Primary color for focus rings */
-
-    /* Sidebar specific colors (can be aliased or customized further if needed) */
-    --sidebar-background: 220 15% 12%; /* Slightly different from main bg if desired */
-    --sidebar-foreground: 210 40% 90%;
-    --sidebar-primary: var(--primary);
-    --sidebar-primary-foreground: var(--primary-foreground);
-    --sidebar-accent: var(--accent);
-    --sidebar-accent-foreground: var(--accent-foreground);
-    --sidebar-border: 220 15% 18%;
-    --sidebar-ring: var(--ring);
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
   }
 }
 
