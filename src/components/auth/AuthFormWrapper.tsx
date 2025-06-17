@@ -22,7 +22,7 @@ export default function AuthFormWrapper({ title, description, children, footerCo
         <CardHeader className="text-center">
           {showLogo && (
             <Link href="/" className="inline-block mb-4">
-              <ScanBarcode className="h-12 w-12 text-foreground mx-auto" />
+              <ScanBarcode className="h-12 w-12 text-primary mx-auto" />
             </Link>
           )}
           {title && <CardTitle className="text-2xl font-bold tracking-tight">{title}</CardTitle>}
