@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -21,15 +21,24 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
-// This key should ideally be in a shared constants file
 const USERS_STORAGE_KEY = 'traceSmartUsers'; 
 
 interface StoredUser {
   fullName: string;
   email: string;
-  password_unsafe: string; // This is highly insecure, for simulation only
+  password_unsafe: string; 
 }
 
 export default function ProfilePage() {
@@ -40,6 +49,14 @@ export default function ProfilePage() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false);
+
+  const [currentPasswordInput, setCurrentPasswordInput] = useState('');
+  const [newPasswordInput, setNewPasswordInput] = useState('');
+  const [confirmNewPasswordInput, setConfirmNewPasswordInput] = useState('');
+  const [changePasswordError, setChangePasswordError] = useState('');
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
 
   useEffect(() => {
     if (!isLoadingAuth && !isLoggedIn) {
@@ -83,7 +100,7 @@ export default function ProfilePage() {
         title: "Profile Deleted",
         description: "Your profile has been successfully deleted. (Simulation)",
       });
-      logout(); // This will also redirect to /login
+      logout(); 
     } catch (error) {
       console.error("Error deleting profile from localStorage:", error);
       toast({
@@ -95,13 +112,101 @@ export default function ProfilePage() {
     setIsDeleteDialogOpen(false);
   };
 
-  const handleChangePassword = () => {
-    // Placeholder for actual change password functionality
-    toast({
-      title: "Feature Coming Soon",
-      description: "The ability to change your password will be implemented in a future update.",
-    });
+  const validatePasswordComplexity = (passwordToValidate: string): { isValid: boolean; message?: string } => {
+    if (passwordToValidate.length < 8) {
+      return { isValid: false, message: "Password must be at least 8 characters long." };
+    }
+    if (!/[A-Z]/.test(passwordToValidate)) {
+      return { isValid: false, message: "Password must include at least one uppercase letter." };
+    }
+    if (!/[a-z]/.test(passwordToValidate)) {
+      return { isValid: false, message: "Password must include at least one lowercase letter." };
+    }
+    if (!/[0-9]/.test(passwordToValidate)) {
+      return { isValid: false, message: "Password must include at least one number." };
+    }
+    if (!/[!@#$%^&*]/.test(passwordToValidate)) {
+      return { isValid: false, message: "Password must include at least one special character (e.g., !@#$%^&*)." };
+    }
+    return { isValid: true };
   };
+
+  const handleChangePasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setChangePasswordError('');
+    setIsChangingPassword(true);
+
+    if (!currentUser?.email) {
+      setChangePasswordError("User not found. Please log in again.");
+      setIsChangingPassword(false);
+      return;
+    }
+
+    if (newPasswordInput !== confirmNewPasswordInput) {
+      setChangePasswordError("New passwords do not match.");
+      setIsChangingPassword(false);
+      return;
+    }
+
+    const passwordValidation = validatePasswordComplexity(newPasswordInput);
+    if (!passwordValidation.isValid) {
+      setChangePasswordError(passwordValidation.message || "New password does not meet complexity requirements.");
+      setIsChangingPassword(false);
+      return;
+    }
+
+    try {
+      const storedUsersData = localStorage.getItem(USERS_STORAGE_KEY);
+      if (!storedUsersData) {
+        setChangePasswordError("User data not found. Cannot change password.");
+        setIsChangingPassword(false);
+        return;
+      }
+
+      let users: StoredUser[] = JSON.parse(storedUsersData);
+      const userIndex = users.findIndex(user => user.email === currentUser.email);
+
+      if (userIndex === -1) {
+        setChangePasswordError("User not found in storage. Cannot change password.");
+        setIsChangingPassword(false);
+        return;
+      }
+
+      if (users[userIndex].password_unsafe !== currentPasswordInput) {
+        setChangePasswordError("Incorrect current password.");
+        setIsChangingPassword(false);
+        return;
+      }
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      users[userIndex].password_unsafe = newPasswordInput;
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+      setPassword(newPasswordInput); // Update displayed password on profile page
+
+      toast({
+        title: "Password Changed",
+        description: "Your password has been successfully updated. (Simulation)",
+      });
+      setIsChangePasswordDialogOpen(false);
+      setCurrentPasswordInput('');
+      setNewPasswordInput('');
+      setConfirmNewPasswordInput('');
+
+    } catch (error) {
+      console.error("Error changing password:", error);
+      setChangePasswordError("An unexpected error occurred. Please try again.");
+      toast({
+        title: "Error",
+        description: "Could not change password.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
 
   if (isLoadingAuth || !currentUser) {
     return (
@@ -169,9 +274,75 @@ export default function ProfilePage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-3 pt-6">
-            <Button onClick={handleChangePassword} variant="outline" className="w-full">
-              <Edit3 className="mr-2 h-4 w-4" /> Change Password
-            </Button>
+            <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  <Edit3 className="mr-2 h-4 w-4" /> Change Password
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Change Password</DialogTitle>
+                  <DialogDescription>
+                    Enter your current password and a new password below.
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleChangePasswordSubmit} className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="currentPassword">Current Password</Label>
+                    <Input
+                      id="currentPassword"
+                      type="password"
+                      value={currentPasswordInput}
+                      onChange={(e) => setCurrentPasswordInput(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="newPassword">New Password</Label>
+                    <Input
+                      id="newPassword"
+                      type="password"
+                      value={newPasswordInput}
+                      onChange={(e) => setNewPasswordInput(e.target.value)}
+                      required
+                      aria-describedby="new-password-requirements"
+                    />
+                     <p id="new-password-requirements" className="text-xs text-muted-foreground">
+                      Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
+                    <Input
+                      id="confirmNewPassword"
+                      type="password"
+                      value={confirmNewPasswordInput}
+                      onChange={(e) => setConfirmNewPasswordInput(e.target.value)}
+                      required
+                    />
+                  </div>
+                  {changePasswordError && (
+                    <p className="text-sm text-destructive">{changePasswordError}</p>
+                  )}
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button type="button" variant="outline" onClick={() => {
+                        setChangePasswordError('');
+                        setCurrentPasswordInput('');
+                        setNewPasswordInput('');
+                        setConfirmNewPasswordInput('');
+                      }}>
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button type="submit" disabled={isChangingPassword}>
+                      {isChangingPassword ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Save Changes"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
             
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
@@ -208,3 +379,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
