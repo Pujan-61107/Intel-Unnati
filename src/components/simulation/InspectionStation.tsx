@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { Product, ValidationResult, ProcessStatus } from '@/lib/types';
@@ -26,7 +27,7 @@ export default function InspectionStation({
   
   const renderStatusIcon = () => {
     if (processStatus === 'ai_validating') return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
-    if (processStatus === 'validation_complete_accepted') return <CheckCircle2 className="h-5 w-5 text-accent" />;
+    if (processStatus === 'validation_complete_accepted') return <CheckCircle2 className="h-5 w-5 text-green-500" />; // Changed from text-accent
     if (processStatus === 'validation_complete_rejected') return <XCircle className="h-5 w-5 text-destructive" />;
     if (processStatus === 'label_generated') return <QrCode className="h-5 w-5 text-primary" />
     return <Cpu className="h-5 w-5 text-primary" />;
@@ -63,8 +64,8 @@ export default function InspectionStation({
                 <li className="flex items-center"><Layers className="mr-2 h-4 w-4 text-muted-foreground" />Batch ID: <span className="font-medium ml-1">{product.batchId}</span></li>
                 <li className="flex items-center"><CalendarDays className="mr-2 h-4 w-4 text-muted-foreground" />Mfg. Date: <span className="font-medium ml-1">{product.manufacturingDate}</span></li>
                 <li className="flex items-center">
-                  {product.rohsCompliant ? <ShieldCheck className="mr-2 h-4 w-4 text-accent" /> : <ShieldOff className="mr-2 h-4 w-4 text-destructive" />}
-                  RoHS Compliant: <span className={`font-medium ml-1 ${product.rohsCompliant ? 'text-accent' : 'text-destructive'}`}>{product.rohsCompliant ? 'Yes' : 'No'}</span>
+                  {product.rohsCompliant ? <ShieldCheck className="mr-2 h-4 w-4 text-green-500" /> : <ShieldOff className="mr-2 h-4 w-4 text-destructive" />}
+                  RoHS Compliant: <span className={`font-medium ml-1 ${product.rohsCompliant ? 'text-green-500' : 'text-destructive'}`}>{product.rohsCompliant ? 'Yes' : 'No'}</span>
                 </li>
                  <li className="flex items-center"><QrCode className="mr-2 h-4 w-4 text-muted-foreground" />Serial No: <span className="font-medium ml-1">{product.serialNumber}</span></li>
               </ul>
@@ -106,10 +107,10 @@ export default function InspectionStation({
             </div>
 
             {aiValidationResult && (processStatus === 'validation_complete_accepted' || processStatus === 'validation_complete_rejected') && (
-              <div className={`p-4 rounded-md border animate-fadeIn ${aiValidationResult.isValid ? 'bg-accent/10 border-accent' : 'bg-destructive/10 border-destructive'}`}>
+              <div className={`p-4 rounded-md border animate-fadeIn ${aiValidationResult.isValid ? 'bg-green-500/10 border-green-500' : 'bg-destructive/10 border-destructive'}`}>
                 <h4 className="font-semibold flex items-center mb-1">
-                  {aiValidationResult.isValid ? <CheckCircle2 className="mr-2 h-5 w-5 text-accent" /> : <XCircle className="mr-2 h-5 w-5 text-destructive" />}
-                  AI Validation: <span className={aiValidationResult.isValid ? 'text-accent' : 'text-destructive'}>{aiValidationResult.isValid ? 'Passed' : 'Failed'}</span>
+                  {aiValidationResult.isValid ? <CheckCircle2 className="mr-2 h-5 w-5 text-green-500" /> : <XCircle className="mr-2 h-5 w-5 text-destructive" />}
+                  AI Validation: <span className={aiValidationResult.isValid ? 'text-green-500' : 'text-destructive'}>{aiValidationResult.isValid ? 'Passed' : 'Failed'}</span>
                 </h4>
                 <p className="text-sm text-muted-foreground">{aiValidationResult.validationMessage}</p>
               </div>
