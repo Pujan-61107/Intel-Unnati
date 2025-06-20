@@ -11,21 +11,22 @@ import Header from '@/components/layout/Header';
 import ConveyorBelt from '@/components/simulation/ConveyorBelt';
 import InspectionStation from '@/components/simulation/InspectionStation';
 import LogDisplay from '@/components/simulation/LogDisplay';
+import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4 } from 'uuid';
-import { Loader2 } from 'lucide-react';
+import { Loader2, RotateCcwIcon, Trash2Icon } from 'lucide-react';
 
 const initialProducts: Product[] = [
   { id: 'p1', deviceId: 'DEV001', batchId: 'BATCH-A1', manufacturingDate: '2024-07-15', rohsCompliant: true, serialNumber: 'SN-TRSMT-001' },
   { id: 'p2', deviceId: 'DEV002', batchId: 'BATCH-A2', manufacturingDate: '2024-07-16', rohsCompliant: false, serialNumber: 'SN-TRSMT-002' },
   { id: 'p3', deviceId: 'DEV003', batchId: 'BATCH-B1', manufacturingDate: '2024-07-17', rohsCompliant: true, serialNumber: 'SN-TRSMT-003' },
-  { id: 'p4', deviceId: 'DEV004', batchId: 'BATCH-B2', manufacturingDate: '2024-07-18', rohsCompliant: true, serialNumber: 'SN-TRSMT-004', labelImageUrl: 'https://placehold.co/300x150.png/.webp?text=DeviceID:DEV004%5CnBatchID:BATCH-B2%5CnMfgDate:2024-07-18%5CnRoHS:Yes%5CnSN:SN-TRSMT-004-INVALID' }, // Example of a potentially problematic label for AI to catch
+  { id: 'p4', deviceId: 'DEV004', batchId: 'BATCH-B2', manufacturingDate: '2024-07-18', rohsCompliant: true, serialNumber: 'SN-TRSMT-004', labelImageUrl: 'https://placehold.co/400x200.png?text=DeviceID:DEV004%0ABatchID:BATCH-B2%0AMfgDate:2024-07-18%0ARoHS:Yes%0ASN:SN-TRSMT-004-INVALID' }, // Corrected placeholder, specific text for AI test
   { id: 'p5', deviceId: 'DEV005', batchId: 'BATCH-C1', manufacturingDate: '2024-07-19', rohsCompliant: true, serialNumber: 'SN-TRSMT-005' },
 ];
 
 
 export default function TraceSmartPage() {
-  const [productQueue, setProductQueue] = useState<Product[]>(initialProducts);
+  const [productQueue, setProductQueue] = useState<Product[]>(() => [...initialProducts]);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [aiValidationResult, setAiValidationResult] = useState<ValidationResult | null>(null);
@@ -42,7 +43,7 @@ export default function TraceSmartPage() {
   }, [isLoggedIn, isLoadingAuth, router]);
 
   const addLog = useCallback((message: string, type: LogEntry['type']) => {
-    setLogs(prevLogs => [{ id: uuidv4(), timestamp: new Date().toLocaleTimeString(), message, type }, ...prevLogs]);
+    setLogs(prevLogs => [{ id: uuidv4(), timestamp: new Date().toLocaleTimeString(), message, type }, ...prevLogs.slice(0, 99)]); // Keep last 100 logs
   }, []);
 
   const handleNextProduct = useCallback(() => {
@@ -52,29 +53,34 @@ export default function TraceSmartPage() {
       return;
     }
 
-    if (productQueue.length === 0) {
-      addLog("Product queue is empty.", 'info');
-      toast({ title: "Queue Empty", description: "No more products to process." });
-      setCurrentProduct(null);
-      setProcessStatus('idle');
-      return;
-    }
-    
-    const nextProduct = productQueue[0];
-    setProductQueue(prev => prev.slice(1));
-    setCurrentProduct(nextProduct);
-    setAiValidationResult(null);
-    setProcessStatus('inspecting');
-    addLog(`Product ${nextProduct.deviceId} (SN: ${nextProduct.serialNumber}) moved to inspection.`, 'info');
-  }, [productQueue, addLog, toast, processStatus]); // processStatus added
+    setProductQueue(prevQueue => {
+      if (prevQueue.length === 0) {
+        addLog("Product queue is empty.", 'info');
+        // Only toast if it's not an automatic call after reset
+        if (currentProduct !== null) { // Avoid toast if currentProduct was just cleared by reset
+            toast({ title: "Queue Empty", description: "No more products to process." });
+        }
+        setCurrentProduct(null);
+        setProcessStatus('idle');
+        return [];
+      }
+      
+      const nextProduct = prevQueue[0];
+      const remainingQueue = prevQueue.slice(1);
+      
+      setCurrentProduct(nextProduct);
+      setAiValidationResult(null);
+      setProcessStatus('inspecting');
+      addLog(`Product ${nextProduct.deviceId} (SN: ${nextProduct.serialNumber}) moved to inspection.`, 'info');
+      return remainingQueue;
+    });
+  }, [addLog, toast, processStatus, currentProduct]);
 
   useEffect(() => {
-    // Automatically load the first product if queue is not empty, no current product, and user is logged in.
-    // And not currently in an AI validation state.
-    if (isLoggedIn && !currentProduct && productQueue.length > 0 && processStatus !== 'ai_validating') {
+    if (isLoggedIn && !currentProduct && productQueue.length > 0 && processStatus !== 'ai_validating' && processStatus !== 'inspecting') {
       handleNextProduct();
     }
-  }, [isLoggedIn, currentProduct, productQueue, processStatus, handleNextProduct]); // productQueue and processStatus added
+  }, [isLoggedIn, currentProduct, productQueue, processStatus, handleNextProduct]);
 
 
   const handleGenerateLabel = () => {
@@ -89,7 +95,7 @@ export default function TraceSmartPage() {
     }
 
     const labelText = `DeviceID:${currentProduct.deviceId}\\nBatchID:${currentProduct.batchId}\\nMfgDate:${currentProduct.manufacturingDate}\\nRoHS:${currentProduct.rohsCompliant ? 'Yes' : 'No'}\\nSN:${currentProduct.serialNumber}`;
-    const labelImageUrl = `https://placehold.co/400x200.png/.webp?text=${encodeURIComponent(labelText)}&font=spacegrotesk`;
+    const labelImageUrl = `https://placehold.co/400x200.png?text=${encodeURIComponent(labelText)}&font=spacegrotesk`;
     
     setCurrentProduct(prev => prev ? { ...prev, labelImageUrl } : null);
     setProcessStatus('label_generated');
@@ -111,7 +117,7 @@ export default function TraceSmartPage() {
       batchId: currentProduct.batchId,
       manufacturingDate: currentProduct.manufacturingDate,
       rohsCompliance: currentProduct.rohsCompliant,
-      serialNumber: currentProduct.serialNumber, // Added serial number
+      serialNumber: currentProduct.serialNumber,
     };
 
     try {
@@ -137,7 +143,39 @@ export default function TraceSmartPage() {
     }
   };
 
-  const isNextProductDisabled = processStatus === 'ai_validating'; // Simplified: only disable if AI is actively validating
+  const handleResetSimulation = () => {
+    addLog("Simulation reset by user.", 'info');
+    setProductQueue([...initialProducts]);
+    setCurrentProduct(null); 
+    setAiValidationResult(null);
+    setProcessStatus('idle');
+    setIsLoadingAi(false); 
+    // Logs are cleared by handleClearLogs if needed, or kept if granular reset is desired.
+    // For a full reset, we can clear logs here too: setLogs([]);
+    toast({ title: "Simulation Reset", description: "The simulation has been reset to its initial state." });
+    // Trigger loading the first product after state updates have settled
+    setTimeout(() => {
+        setProductQueue(prevQueue => {
+          if (prevQueue.length > 0) {
+            const nextProduct = prevQueue[0];
+            const remainingQueue = prevQueue.slice(1);
+            setCurrentProduct(nextProduct);
+            setProcessStatus('inspecting');
+            addLog(`Product ${nextProduct.deviceId} (SN: ${nextProduct.serialNumber}) moved to inspection.`, 'info');
+            return remainingQueue;
+          }
+          return prevQueue;
+        });
+    }, 0);
+  };
+
+  const handleClearLogs = () => {
+    setLogs([]);
+    addLog("Event logs cleared by user.", 'info');
+    toast({ title: "Logs Cleared", description: "All event logs have been removed." });
+  };
+
+  const isNextProductDisabled = processStatus === 'ai_validating';
 
   if (isLoadingAuth || !isLoggedIn) {
     return (
@@ -152,13 +190,19 @@ export default function TraceSmartPage() {
     <div className="flex flex-col min-h-screen bg-background font-body">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-6">
+        <div className="mb-6 flex flex-col sm:flex-row justify-end items-center gap-2">
+            <Button onClick={handleResetSimulation} variant="outline" size="sm">
+                <RotateCcwIcon className="mr-2 h-4 w-4" />
+                Reset Simulation
+            </Button>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <ConveyorBelt 
               currentProduct={currentProduct} 
               onNextProduct={handleNextProduct}
               productQueueCount={productQueue.length}
-              isProcessing={isNextProductDisabled || productQueue.length === 0} // Disable if AI validating OR queue empty
+              isProcessing={isNextProductDisabled || productQueue.length === 0 && currentProduct === null}
             />
             <InspectionStation
               product={currentProduct}
@@ -171,7 +215,7 @@ export default function TraceSmartPage() {
           </div>
 
           <div className="lg:col-span-1">
-            <LogDisplay logs={logs} />
+            <LogDisplay logs={logs} onClearLogs={handleClearLogs} />
           </div>
         </div>
       </main>
@@ -181,3 +225,5 @@ export default function TraceSmartPage() {
     </div>
   );
 }
+
+    
