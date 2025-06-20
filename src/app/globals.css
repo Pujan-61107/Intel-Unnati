@@ -14,7 +14,7 @@
     --popover: 0 0% 100%; /* White */
     --popover-foreground: 222.2 84% 4.9%; /* Dark Blue/Black */
 
-    --primary: 222.2 47.4% 11.2%; /* Default Dark Blue */
+    --primary: 217 91% 60%; /* Brighter Blue */
     --primary-foreground: 210 40% 98%; /* Light Gray */
 
     --secondary: 210 40% 96.1%; /* Light Gray */
@@ -31,7 +31,7 @@
 
     --border: 214.3 31.8% 91.4%; /* Light Gray Border */
     --input: 214.3 31.8% 91.4%; /* Light Gray Input Background */
-    --ring: 222.2 84% 4.9%; /* Dark Blue/Black Ring */
+    --ring: 217 91% 60%; /* Brighter Blue Ring for focus */
 
     --radius: 0.5rem;
 
