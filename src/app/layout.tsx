@@ -4,6 +4,7 @@ import { Space_Grotesk as FontSpaceGrotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const fontSpaceGrotesk = FontSpaceGrotesk({
   subsets: ['latin'],
@@ -22,11 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fontSpaceGrotesk.variable} dark`}>
+    <html lang="en" className={`${fontSpaceGrotesk.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased min-h-screen flex flex-col">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
         <Toaster />
       </body>
     </html>
