@@ -29,7 +29,7 @@ export default function InspectionStation({
   
   const renderStatusIcon = () => {
     if (processStatus === 'ai_validating') return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
-    if (processStatus === 'validation_complete_accepted') return <CheckCircle2 className="h-5 w-5 text-accent" />; // Using accent (green)
+    if (processStatus === 'validation_complete_accepted') return <CheckCircle2 className="h-5 w-5 text-green-500" />; 
     if (processStatus === 'validation_complete_rejected') return <XCircle className="h-5 w-5 text-destructive" />;
     if (processStatus === 'label_generated') return <QrCode className="h-5 w-5 text-primary" />
     return <Cpu className="h-5 w-5 text-primary" />;
@@ -37,37 +37,47 @@ export default function InspectionStation({
 
   const getStatusBadge = () => {
     let text = "Unknown";
-    let variant: "default" | "destructive" | "secondary" = "default";
+    let variant: "default" | "destructive" | "secondary" | "outline" = "default";
     let className = "";
 
     switch (processStatus) {
       case 'idle': 
         text = product ? "Ready for Processing" : "No Product";
+        variant = "outline";
         break;
       case 'inspecting': 
         text = "Inspecting Product...";
+        variant = "secondary";
         break;
       case 'label_generated': 
         text = "Label Generated";
         variant = "secondary";
+        className = "text-primary border-primary/50";
         break;
       case 'ai_validating': 
         text = "AI Validating Label...";
+        variant = "secondary";
+        className = "text-primary border-primary/50 animate-pulse";
         break;
       case 'validation_complete_accepted': 
         text = "Product Accepted";
-        className = "bg-accent text-accent-foreground hover:bg-accent/90"; // Green
+        className = "bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/50 hover:bg-green-500/30"; 
         break;
       case 'validation_complete_rejected': 
         text = "Product Rejected";
-        variant = "destructive"; // Red
+        variant = "destructive"; 
         break;
       default: 
         text = "Status Unknown";
+        variant = "outline";
         break;
     }
     return <Badge variant={variant} className={cn(className, "text-xs")}>{text}</Badge>;
   }
+
+  const barcodeSrc = product?.serialNumber 
+    ? `https://placehold.co/280x70.png?text=${encodeURIComponent(`|||${product.serialNumber.replace(/-/g,'')}|||`)}&font=spacegrotesk`
+    : "https://placehold.co/280x70.png?text=|||BARCODE|||&font=spacegrotesk";
 
   return (
     <Card className="shadow-lg">
@@ -79,7 +89,6 @@ export default function InspectionStation({
             </CardTitle>
             {getStatusBadge()}
         </div>
-        {/* Removed CardDescription as status is now a badge in the title line */}
       </CardHeader>
       <CardContent className="p-6 space-y-6">
         {product ? (
@@ -93,10 +102,10 @@ export default function InspectionStation({
                 <li className="flex items-center">
                   {product.rohsCompliant 
                     ? <ShieldCheck className="mr-2 h-4 w-4 text-green-500" /> 
-                    : <ShieldOff className="mr-2 h-4 w-4 text-red-500" /> // text-destructive
+                    : <ShieldOff className="mr-2 h-4 w-4 text-destructive" />
                   }
                   RoHS Compliant: 
-                  <span className={`font-medium ml-1 ${product.rohsCompliant ? 'text-green-500' : 'text-red-500'}`}>
+                  <span className={`font-medium ml-1 ${product.rohsCompliant ? 'text-green-500' : 'text-destructive'}`}>
                     {product.rohsCompliant ? 'Yes' : 'No'}
                   </span>
                 </li>
@@ -105,16 +114,24 @@ export default function InspectionStation({
             </div>
 
             {product.labelImageUrl && (
-              <div className="border p-1 rounded-md bg-slate-100 dark:bg-slate-800 shadow-lg animate-fadeIn">
+              <div className="border p-1 rounded-md bg-slate-100 dark:bg-slate-700/50 shadow-lg animate-fadeIn">
                  <h3 className="text-sm font-semibold mb-2 text-primary/80 dark:text-primary/90 px-2 pt-1 font-headline">Generated Label Preview:</h3>
-                <div className="bg-white p-2 rounded-sm shadow-inner overflow-hidden">
+                <div className="bg-white p-2 rounded-sm shadow-inner overflow-hidden space-y-2">
                   <Image 
                     src={product.labelImageUrl} 
-                    alt="Simulated Product Label" 
+                    alt="Simulated Product Label - Text" 
                     width={300} 
                     height={150} 
                     className="rounded-xs mx-auto"
                     data-ai-hint="product label" 
+                  />
+                  <Image
+                    src={barcodeSrc}
+                    alt={`Simulated Barcode for SN: ${product.serialNumber}`}
+                    width={280}
+                    height={70}
+                    className="rounded-xs mx-auto"
+                    data-ai-hint="barcode product"
                   />
                 </div>
               </div>
@@ -123,7 +140,7 @@ export default function InspectionStation({
             <div className="flex flex-col sm:flex-row gap-2">
               <Button 
                 onClick={onGenerateLabel} 
-                disabled={processStatus !== 'inspecting' && processStatus !== 'idle' || !product || isLoadingAi || (product && processStatus === 'validation_complete_rejected')}
+                disabled={processStatus !== 'inspecting' && processStatus !== 'idle' || !product || isLoadingAi || (product && processStatus === 'validation_complete_rejected' && !product.rohsCompliant) || (product && processStatus === 'validation_complete_accepted')}
                 className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground"
               >
                 <QrCode className="mr-2 h-5 w-5" />
@@ -132,7 +149,7 @@ export default function InspectionStation({
               <Button 
                 onClick={onValidateAI} 
                 disabled={processStatus !== 'label_generated' || isLoadingAi || !product.labelImageUrl}
-                className="flex-1 bg-accent hover:bg-accent/80 text-accent-foreground"
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
               >
                 {isLoadingAi ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
                 Validate Label with AI
@@ -147,7 +164,7 @@ export default function InspectionStation({
                     : <XCircle className="mr-2 h-5 w-5 text-red-500" />
                   }
                   AI Validation: 
-                  <span className={aiValidationResult.isValid ? 'text-green-500' : 'text-red-500'}>
+                  <span className={aiValidationResult.isValid ? 'text-green-500' : 'text-destructive'}>
                     {aiValidationResult.isValid ? 'Passed' : 'Failed'}
                   </span>
                 </h4>
