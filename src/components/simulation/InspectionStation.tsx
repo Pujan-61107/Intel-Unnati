@@ -1,37 +1,29 @@
 
 "use client";
 
-import type { Product, ValidationResult, ProcessStatus } from '@/lib/types';
+import type { Product, ProcessStatus } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Cpu, Layers, CalendarDays, ShieldCheck, ShieldOff, CheckCircle2, XCircle, Loader2, QrCode, Wand2, Package, Check, AlertTriangle } from 'lucide-react';
+import { Cpu, Layers, CalendarDays, ShieldCheck, ShieldOff, CheckCircle2, XCircle, QrCode, Package } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 interface InspectionStationProps {
   product: Product | null;
-  onGenerateLabel: () => void;
-  onValidateAI: () => Promise<void>;
-  aiValidationResult: ValidationResult | null;
+  onApproveAndGenerate: () => void;
   processStatus: ProcessStatus;
-  isLoadingAi: boolean;
 }
 
 export default function InspectionStation({
   product,
-  onGenerateLabel,
-  onValidateAI,
-  aiValidationResult,
+  onApproveAndGenerate,
   processStatus,
-  isLoadingAi,
 }: InspectionStationProps) {
   
   const renderStatusIcon = () => {
-    if (processStatus === 'ai_validating') return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
-    if (processStatus === 'validation_complete_accepted') return <CheckCircle2 className="h-5 w-5 text-green-500" />; 
-    if (processStatus === 'validation_complete_rejected') return <XCircle className="h-5 w-5 text-destructive" />;
-    if (processStatus === 'label_generated') return <QrCode className="h-5 w-5 text-primary" />
+    if (processStatus === 'completed_accepted') return <CheckCircle2 className="h-5 w-5 text-green-500" />; 
+    if (processStatus === 'completed_rejected') return <XCircle className="h-5 w-5 text-destructive" />;
     return <Cpu className="h-5 w-5 text-primary" />;
   };
 
@@ -46,24 +38,14 @@ export default function InspectionStation({
         variant = "outline";
         break;
       case 'inspecting': 
-        text = "Inspecting Product...";
+        text = "Ready for Inspection";
         variant = "secondary";
         break;
-      case 'label_generated': 
-        text = "Label Generated";
-        variant = "secondary";
-        className = "text-primary border-primary/50";
-        break;
-      case 'ai_validating': 
-        text = "AI Validating Label...";
-        variant = "secondary";
-        className = "text-primary border-primary/50 animate-pulse";
-        break;
-      case 'validation_complete_accepted': 
+      case 'completed_accepted': 
         text = "Product Accepted";
         className = "bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/50 hover:bg-green-500/30"; 
         break;
-      case 'validation_complete_rejected': 
+      case 'completed_rejected': 
         text = "Product Rejected";
         variant = "destructive"; 
         break;
@@ -137,40 +119,14 @@ export default function InspectionStation({
               </div>
             )}
             
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Button 
-                onClick={onGenerateLabel} 
-                disabled={processStatus !== 'inspecting' && processStatus !== 'idle' || !product || isLoadingAi || (product && processStatus === 'validation_complete_rejected' && !product.rohsCompliant) || (product && processStatus === 'validation_complete_accepted')}
-                className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground"
-              >
-                <QrCode className="mr-2 h-5 w-5" />
-                Generate & Print Label
-              </Button>
-              <Button 
-                onClick={onValidateAI} 
-                disabled={processStatus !== 'label_generated' || isLoadingAi || !product.labelImageUrl}
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-              >
-                {isLoadingAi ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
-                Validate Label with AI
-              </Button>
-            </div>
-
-            {aiValidationResult && (processStatus === 'validation_complete_accepted' || processStatus === 'validation_complete_rejected') && (
-              <div className={`p-4 rounded-md border animate-fadeIn ${aiValidationResult.isValid ? 'bg-green-500/10 border-green-500' : 'bg-red-500/10 border-red-500'}`}>
-                <h4 className="font-semibold flex items-center mb-1">
-                  {aiValidationResult.isValid 
-                    ? <CheckCircle2 className="mr-2 h-5 w-5 text-green-500" /> 
-                    : <XCircle className="mr-2 h-5 w-5 text-red-500" />
-                  }
-                  AI Validation: 
-                  <span className={aiValidationResult.isValid ? 'text-green-500' : 'text-destructive'}>
-                    {aiValidationResult.isValid ? 'Passed' : 'Failed'}
-                  </span>
-                </h4>
-                <p className="text-sm text-muted-foreground">{aiValidationResult.validationMessage}</p>
-              </div>
-            )}
+            <Button 
+              onClick={onApproveAndGenerate} 
+              disabled={processStatus !== 'inspecting' || !product}
+              className="w-full bg-primary hover:bg-primary/80 text-primary-foreground"
+            >
+              <CheckCircle2 className="mr-2 h-5 w-5" />
+              Approve & Generate Label
+            </Button>
           </>
         ) : (
           <div className="text-center py-10 animate-fadeIn">
@@ -183,5 +139,3 @@ export default function InspectionStation({
     </Card>
   );
 }
-
-    

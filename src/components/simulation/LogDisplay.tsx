@@ -16,7 +16,6 @@ const LogIcon = ({ type }: { type: LogEntry['type'] }) => {
   switch (type) {
     case 'success': return <CheckCircle className="h-4 w-4 text-accent mr-2 flex-shrink-0" />;
     case 'error': return <AlertTriangle className="h-4 w-4 text-destructive mr-2 flex-shrink-0" />;
-    case 'ai': return <Sparkles className="h-4 w-4 text-primary mr-2 flex-shrink-0" />;
     case 'info':
     default:
       return <Info className="h-4 w-4 text-muted-foreground mr-2 flex-shrink-0" />;
@@ -60,5 +59,3 @@ export default function LogDisplay({ logs, onClearLogs }: LogDisplayProps) {
     </Card>
   );
 }
-
-    
