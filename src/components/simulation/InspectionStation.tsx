@@ -12,12 +12,14 @@ import { cn } from '@/lib/utils';
 interface InspectionStationProps {
   product: Product | null;
   onApproveAndGenerate: () => void;
+  onReject: () => void;
   processStatus: ProcessStatus;
 }
 
 export default function InspectionStation({
   product,
   onApproveAndGenerate,
+  onReject,
   processStatus,
 }: InspectionStationProps) {
   
@@ -119,14 +121,25 @@ export default function InspectionStation({
               </div>
             )}
             
-            <Button 
-              onClick={onApproveAndGenerate} 
-              disabled={processStatus !== 'inspecting' || !product}
-              className="w-full bg-primary hover:bg-primary/80 text-primary-foreground"
-            >
-              <CheckCircle2 className="mr-2 h-5 w-5" />
-              Approve & Generate Label
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button 
+                onClick={onReject}
+                variant="destructive"
+                disabled={processStatus !== 'inspecting' || !product}
+                className="w-full"
+              >
+                <XCircle className="mr-2 h-5 w-5" />
+                Reject Product
+              </Button>
+              <Button 
+                onClick={onApproveAndGenerate} 
+                disabled={processStatus !== 'inspecting' || !product}
+                className="w-full bg-primary hover:bg-primary/80 text-primary-foreground"
+              >
+                <CheckCircle2 className="mr-2 h-5 w-5" />
+                Approve & Generate Label
+              </Button>
+            </div>
           </>
         ) : (
           <div className="text-center py-10 animate-fadeIn">

@@ -91,6 +91,17 @@ export default function TraceSmartPage() {
     addLog(`Label generated and product approved for ${currentProduct.deviceId}.`, 'success');
     toast({ title: "Product Approved", description: `Simulated label created for ${currentProduct.deviceId}.` });
   };
+  
+  const handleRejectProduct = () => {
+    if (!currentProduct) return;
+    addLog(`Product ${currentProduct.deviceId} rejected by operator.`, 'error');
+    toast({
+      title: "Product Rejected",
+      description: `Product ${currentProduct.deviceId} has been manually rejected.`,
+      variant: "destructive",
+    });
+    setProcessStatus('completed_rejected');
+  };
 
   const handleResetSimulation = () => {
     addLog("Simulation reset by user.", 'info');
@@ -152,6 +163,7 @@ export default function TraceSmartPage() {
             <InspectionStation
               product={currentProduct}
               onApproveAndGenerate={handleGenerateAndApprove}
+              onReject={handleRejectProduct}
               processStatus={processStatus}
             />
           </div>
