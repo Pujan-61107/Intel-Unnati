@@ -63,8 +63,8 @@ Compare the extracted text below against the expected information and validate t
 - Serial Number: {{{serialNumber}}}
 
 **Instructions:**
-- **RoHS Rule:** The boolean 'true' for 'RoHS Compliant' must match the text 'RoHS:Yes' on the label. 'false' must match 'RoHS:No'.
-- **Serial Number Rule:** The 'Serial Number' may be prefixed with 'SN:'. Check for the presence of the full serial number string '{{{serialNumber}}}'.
+- **RoHS Rule:** The boolean 'true' for 'RoHS Compliant' must match if the extracted text contains 'RoHS:Yes'. 'false' must match if the text contains 'RoHS:No'.
+- **Serial Number Rule:** The extracted text must contain the exact serial number string: '{{{serialNumber}}}'. A prefix like 'SN:' is acceptable.
 - **Reporting:**
   - If every single piece of information is present and correct according to the rules, set \`isValid\` to \`true\` and \`validationResult\` to "All information is present and correct on the label.".
   - If even one piece of information is missing, incorrect, or does not match, set \`isValid\` to \`false\` and create a \`validationResult\` string that details every discrepancy found (e.g., "Device ID: Correct. Batch ID: Missing. Serial Number: Found 'SN-123' instead of 'SN-456'.").
