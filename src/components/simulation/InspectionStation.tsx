@@ -24,7 +24,7 @@ export default function InspectionStation({
 }: InspectionStationProps) {
   
   const renderStatusIcon = () => {
-    if (processStatus === 'completed_accepted') return <CheckCircle2 className="h-5 w-5 text-green-500" />; 
+    if (processStatus === 'completed_accepted') return <CheckCircle2 className="h-5 w-5 text-accent" />; 
     if (processStatus === 'completed_rejected') return <XCircle className="h-5 w-5 text-destructive" />;
     return <Cpu className="h-5 w-5 text-primary" />;
   };
@@ -45,7 +45,7 @@ export default function InspectionStation({
         break;
       case 'completed_accepted': 
         text = "Product Accepted";
-        className = "bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/50 hover:bg-green-500/30"; 
+        className = "bg-accent/20 text-accent border-accent/50 hover:bg-accent/30"; 
         break;
       case 'completed_rejected': 
         text = "Product Rejected";
@@ -85,11 +85,11 @@ export default function InspectionStation({
                 <li className="flex items-center"><CalendarDays className="mr-2 h-4 w-4 text-muted-foreground" />Mfg. Date: <span className="font-medium ml-1">{product.manufacturingDate}</span></li>
                 <li className="flex items-center">
                   {product.rohsCompliant 
-                    ? <ShieldCheck className="mr-2 h-4 w-4 text-green-500" /> 
+                    ? <ShieldCheck className="mr-2 h-4 w-4 text-accent" /> 
                     : <ShieldOff className="mr-2 h-4 w-4 text-destructive" />
                   }
                   RoHS Compliant: 
-                  <span className={`font-medium ml-1 ${product.rohsCompliant ? 'text-green-500' : 'text-destructive'}`}>
+                  <span className={`font-medium ml-1 ${product.rohsCompliant ? 'text-accent' : 'text-destructive'}`}>
                     {product.rohsCompliant ? 'Yes' : 'No'}
                   </span>
                 </li>

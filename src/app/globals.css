@@ -5,32 +5,32 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* White */
+    --background: 210 40% 98%; /* Very Light Gray */
     --foreground: 222.2 84% 4.9%; /* Dark Blue/Black */
 
     --card: 0 0% 100%; /* White */
-    --card-foreground: 222.2 84% 4.9%; /* Dark Blue/Black */
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 0 0% 100%; /* White */
-    --popover-foreground: 222.2 84% 4.9%; /* Dark Blue/Black */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
     --primary: 217 91% 60%; /* Brighter Blue */
-    --primary-foreground: 210 40% 98%; /* Light Gray */
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%; /* Light Gray */
-    --secondary-foreground: 222.2 47.4% 11.2%; /* Default Dark Blue */
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%; /* Light Gray */
-    --muted-foreground: 215.4 16.3% 46.9%; /* Medium Gray */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%; /* Light Gray */
-    --accent-foreground: 222.2 47.4% 11.2%; /* Default Dark Blue */
+    --accent: 140 70% 40%; /* Vibrant Green */
+    --accent-foreground: 210 40% 98%;
     
-    --destructive: 0 84.2% 60.2%; /* Red */
-    --destructive-foreground: 210 40% 98%; /* Light Gray */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%; /* Light Gray Border */
-    --input: 214.3 31.8% 91.4%; /* Light Gray Input Background */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
     --ring: 217 91% 60%; /* Brighter Blue Ring for focus */
 
     --radius: 0.5rem;
@@ -43,34 +43,33 @@
   }
 
   .dark {
-    /* Colorful Dark Theme */
-    --background: 225 20% 12%; /* Deep Cool Gray */
-    --foreground: 210 30% 95%; /* Very Light Gray / Off-white */
+    --background: 235 60% 15%; /* Dark Navy Blue */
+    --foreground: 210 40% 98%;
 
-    --card: 225 20% 18%; /* Slightly Lighter Cool Gray for Cards */
-    --card-foreground: 210 30% 95%;
+    --card: 235 60% 20%; /* Slightly lighter navy */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 225 20% 15%; /* Popover Background */
-    --popover-foreground: 210 30% 95%;
+    --popover: 235 60% 12%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 180 70% 55%; /* Vibrant Teal */
-    --primary-foreground: 225 10% 10%; /* Darker text for on primary elements */
+    --primary: 182 100% 74%; /* Electric Blue */
+    --primary-foreground: 182 100% 10%; /* Dark text for on-primary elements */
 
-    --secondary: 225 20% 25%; /* Muted Teal/Gray for Secondary elements */
-    --secondary-foreground: 210 30% 90%;
+    --secondary: 235 60% 25%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 225 15% 30%; /* Muted elements background */
-    --muted-foreground: 210 25% 70%; /* Muted text */
+    --muted: 235 60% 25%;
+    --muted-foreground: 240 5% 65%;
 
-    --accent: 320 80% 60%; /* Bright Magenta/Pink */
-    --accent-foreground: 210 30% 95%; /* Text on accent */
+    --accent: 111 100% 54%; /* Neon Green */
+    --accent-foreground: 111 100% 10%; /* Dark text on accent */
     
-    --destructive: 0 70% 55%; /* Saturated Red */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 225 20% 22%; /* Border for Card - subtle */
-    --input: 225 20% 20%; /* Input field background */
-    --ring: 180 70% 55%; /* Vibrant Teal for Focus Ring */
+    --border: 235 60% 25%;
+    --input: 235 60% 22%;
+    --ring: 182 100% 74%; /* Electric Blue Ring */
   }
 }
 

@@ -38,7 +38,7 @@ export default function LogDisplay({ logs, onClearLogs }: LogDisplayProps) {
         </div>
       </CardHeader>
       <CardContent className="p-0 flex-grow overflow-hidden">
-        <ScrollArea className="h-[300px] md:h-[calc(100%-0px)] p-6"> {/* Adjusted height for better fit if needed */}
+        <ScrollArea className="h-[300px] md:h-[calc(100%-0px)] p-6">
           {logs.length === 0 ? (
             <p className="text-muted-foreground text-center py-10">No events yet. Start processing products.</p>
           ) : (

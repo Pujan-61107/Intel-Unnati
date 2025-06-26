@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { Product } from '@/lib/types';
@@ -53,7 +54,7 @@ export default function ConveyorBelt({ currentProduct, onNextProduct, productQue
             />
             
             {currentProduct ? (
-              <div className="text-center animate-fadeIn relative z-10"> {/* Ensure product is above belt animation */}
+              <div className="text-center animate-fadeIn relative z-10">
                 <Image 
                   src="https://placehold.co/100x80.png" 
                   alt="Product" 
@@ -68,7 +69,7 @@ export default function ConveyorBelt({ currentProduct, onNextProduct, productQue
             ) : (
               <p className="text-muted-foreground relative z-10">Inspection zone empty</p>
             )}
-            {/* Static Chevrons indicating movement direction (less obtrusive now) */}
+            {/* Static Chevrons indicating movement direction */}
              <ChevronRight className="absolute left-1 top-1/2 -translate-y-1/2 h-6 w-6 text-primary/30 z-0" />
              <ChevronRight className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-primary/30 z-0" />
           </div>
