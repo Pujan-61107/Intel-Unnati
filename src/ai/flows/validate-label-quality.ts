@@ -65,27 +65,26 @@ const validateLabelQualityPrompt = ai.definePrompt({
   output: {schema: ValidateLabelQualityOutputSchema},
   tools: [ocrTool],
   prompt: `You are a meticulous Quality Control Inspector for product labels.
-Your task is to validate a product label based on text extracted via OCR.
-Use the ocrTool to get the text from the label image provided (labelImageUri).
+Your task is to validate a product label based on the image provided in \`labelImageUri\`.
 
-Expected Product Information:
+First, use the \`ocrTool\` with the \`labelImageUri\` to extract all visible text from the product label image.
+
+Then, based on the text you extracted from the label, you must meticulously compare it against the following expected product information:
 - Device ID: {{{deviceId}}}
 - Batch ID: {{{batchId}}}
 - Manufacturing Date: {{{manufacturingDate}}}
 - RoHS Compliant: {{{rohsCompliance}}}
 - Serial Number: {{{serialNumber}}}
 
-OCR Output from Label: {{await ocrTool imageUri=labelImageUri}}
+Your validation should check the following points:
+1.  Is the Device ID "{{{deviceId}}}" present and correct?
+2.  Is the Batch ID "{{{batchId}}}" present and correct?
+3.  Is the Manufacturing Date "{{{manufacturingDate}}}" present and correct?
+4.  Is the RoHS compliance status (equivalent to "{{{rohsCompliance}}}") present and correct? (e.g., look for "RoHS: Yes", "RoHS Compliant" for true; "RoHS: No" for false).
+5.  Is the Serial Number "{{{serialNumber}}}" present and correct?
 
-Based on the OCR Output, meticulously check the following:
-1.  Is the Device ID "{{{deviceId}}}" present and correct on the label?
-2.  Is the Batch ID "{{{batchId}}}" present and correct on the label?
-3.  Is the Manufacturing Date "{{{manufacturingDate}}}" present and correct on the label?
-4.  Is the RoHS compliance status (equivalent to "{{{rohsCompliance}}}") present and correct on the label? (e.g., "RoHS: Yes", "RoHS Compliant", or similar for true; "RoHS: No", "Not RoHS Compliant" for false)
-5.  Is the Serial Number "{{{serialNumber}}}" present and correct on the label?
-
-Determine if the label is overall 'isValid'. The label is 'isValid' ONLY IF ALL expected pieces of information are present on the label and match the expected values.
-Provide a detailed 'validationResult' summarizing your findings for each check (present and correct, present but incorrect, or missing). If incorrect, state what was found.
+Finally, determine if the label is 'isValid'. The label is 'isValid' **ONLY IF ALL** expected pieces of information are present on the label and match the expected values exactly.
+Provide a detailed 'validationResult' that summarizes your findings for each check (e.g., "present and correct", "present but incorrect", or "missing"). If a value is incorrect, state what was found on the label.
 
 Return a JSON object with "isValid" (boolean) and "validationResult" (string).
 Example for a partially incorrect label:
