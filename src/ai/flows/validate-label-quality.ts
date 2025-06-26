@@ -1,3 +1,4 @@
+
 // src/ai/flows/validate-label-quality.ts
 'use server';
 
@@ -83,10 +84,12 @@ Your validation should check the following points:
 4.  Is the RoHS compliance status (equivalent to "{{{rohsCompliance}}}") present and correct? (e.g., look for "RoHS: Yes", "RoHS Compliant" for true; "RoHS: No" for false).
 5.  Is the Serial Number "{{{serialNumber}}}" present and correct?
 
-Finally, determine if the label is 'isValid'. The label is 'isValid' **ONLY IF ALL** expected pieces of information are present on the label and match the expected values exactly.
-Provide a detailed 'validationResult' that summarizes your findings for each check (e.g., "present and correct", "present but incorrect", or "missing"). If a value is incorrect, state what was found on the label.
+After performing all checks, you must determine the final output.
+- **If all five checks pass successfully**: Set the \`isValid\` field to \`true\`. The \`validationResult\` field should be exactly: "All information is present and correct on the label."
+- **If even one check fails**: Set the \`isValid\` field to \`false\`. The \`validationResult\` field must contain a detailed summary of each check, explaining what was correct, what was missing, or what was incorrect (and what value was found instead).
 
-Return a JSON object with "isValid" (boolean) and "validationResult" (string).
+Return the final JSON object based on these rules.
+
 Example for a partially incorrect label:
 {
   "isValid": false,
@@ -111,3 +114,4 @@ const validateLabelQualityFlow = ai.defineFlow(
     return output!;
   }
 );
+
