@@ -37,51 +37,33 @@ export async function validateLabelQuality(input: ValidateLabelQualityInput): Pr
   return validateLabelQualityFlow(input);
 }
 
-const ocrTool = ai.defineTool({
-  name: 'ocrTool',
-  description: 'Performs OCR on an image of a product label and returns the text found.',
-  inputSchema: z.object({
-    imageUri: z.string().describe('The data URI of the label image to process.'),
-  }),
-  outputSchema: z.string(),
-},
-async (input) => {
-  const {text} = await ai.generate({
-    model: 'googleai/gemini-2.0-flash', // Using a model capable of OCR-like tasks
-    prompt: [
-      {media: {url: input.imageUri}},
-      {text: 'Extract all visible text from this product label image. Present the text clearly.'},
-    ],
-    config: {
-      responseModalities: ['TEXT'],
-    },
-  });
-
-  return text!;
+// New, simpler prompt for validation only. It receives the OCR text as input.
+const validationPromptInputSchema = ValidateLabelQualityInputSchema.extend({
+  extractedText: z.string().describe("The text extracted from the label image via OCR."),
 });
 
-const validateLabelQualityPrompt = ai.definePrompt({
-  name: 'validateLabelQualityPrompt',
-  input: {schema: ValidateLabelQualityInputSchema},
-  output: {schema: ValidateLabelQualityOutputSchema},
-  tools: [ocrTool],
-  system: `You are a Quality Control Inspector. Your only function is to validate product labels by comparing extracted text to expected values and return a JSON object with the results. You must use the provided 'ocrTool' to get the text from the label image.`,
+const validationPrompt = ai.definePrompt({
+  name: 'validationPrompt',
+  input: { schema: validationPromptInputSchema },
+  output: { schema: ValidateLabelQualityOutputSchema },
+  system: `You are a Quality Control Inspector. Your function is to validate product labels by comparing extracted text to expected values and return a JSON object with the results.`,
   prompt: `
-Validate the product label from the image in \`labelImageUri\`.
+Compare the extracted text below against the expected information and validate the product label.
 
-**Step 1: Extract Text**
-Use the \`ocrTool\` with the \`labelImageUri\` to get the text from the label.
+**Extracted Text from Label:**
+---
+{{{extractedText}}}
+---
 
-**Step 2: Compare and Validate**
-Compare the extracted text against this expected information:
+**Expected Information:**
 - Device ID: {{{deviceId}}}
 - Batch ID: {{{batchId}}}
 - Manufacturing Date: {{{manufacturingDate}}}
 - RoHS Compliant: {{{rohsCompliance}}}
 - Serial Number: {{{serialNumber}}}
 
-**Step 3: Formulate Response**
-- If every single piece of information is present and matches the expected values exactly, set \`isValid\` to \`true\` and \`validationResult\` to "All information is present and correct on the label.".
+**Instructions:**
+- If every single piece of expected information is present and matches the extracted text exactly, set \`isValid\` to \`true\` and \`validationResult\` to "All information is present and correct on the label.".
 - If even one piece of information is missing, incorrect, or does not match, set \`isValid\` to \`false\` and create a \`validationResult\` string that details every discrepancy found (e.g., "Device ID: Correct. Batch ID: Missing. Serial Number: Found 'SN-123' instead of 'SN-456'.").
 
 Your final output must be ONLY the JSON object conforming to the output schema. Do not add any extra text or explanations.
@@ -96,13 +78,36 @@ const validateLabelQualityFlow = ai.defineFlow(
   },
   async (input) => {
     try {
-      const { output } = await validateLabelQualityPrompt(input);
-
-      if (!output) {
-        console.error("AI model returned a null or undefined output.");
+      // Step 1: Perform OCR directly in the flow.
+      const { text: ocrText } = await ai.generate({
+        model: 'googleai/gemini-2.0-flash',
+        prompt: [
+          { media: { url: input.labelImageUri } },
+          { text: 'Extract all visible text from this product label image. Present the text clearly.' },
+        ],
+        config: {
+          responseModalities: ['TEXT'],
+        },
+      });
+      
+      if (!ocrText) {
         return {
           isValid: false,
-          validationResult: "AI model failed to generate a valid response. The result was empty.",
+          validationResult: "AI failed to extract any text from the label image (OCR failed).",
+        };
+      }
+
+      // Step 2: Call the validation prompt with the extracted text.
+      const { output } = await validationPrompt({
+        ...input,
+        extractedText: ocrText,
+      });
+
+      if (!output) {
+        console.error("AI model returned a null or undefined output for validation.");
+        return {
+          isValid: false,
+          validationResult: "AI model failed to generate a valid validation response. The result was empty.",
         };
       }
       
