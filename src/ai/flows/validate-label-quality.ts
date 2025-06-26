@@ -65,41 +65,26 @@ const validateLabelQualityPrompt = ai.definePrompt({
   input: {schema: ValidateLabelQualityInputSchema},
   output: {schema: ValidateLabelQualityOutputSchema},
   tools: [ocrTool],
-  prompt: `You are a meticulous Quality Control Inspector for product labels.
-Your task is to validate a product label based on the image provided in \`labelImageUri\`.
+  system: `You are a Quality Control Inspector. Your only function is to validate product labels by comparing extracted text to expected values and return a JSON object with the results. You must use the provided 'ocrTool' to get the text from the label image.`,
+  prompt: `
+Validate the product label from the image in \`labelImageUri\`.
 
-First, use the \`ocrTool\` with the \`labelImageUri\` to extract all visible text from the product label image.
+**Step 1: Extract Text**
+Use the \`ocrTool\` with the \`labelImageUri\` to get the text from the label.
 
-Then, based on the text you extracted from the label, you must meticulously compare it against the following expected product information:
+**Step 2: Compare and Validate**
+Compare the extracted text against this expected information:
 - Device ID: {{{deviceId}}}
 - Batch ID: {{{batchId}}}
 - Manufacturing Date: {{{manufacturingDate}}}
 - RoHS Compliant: {{{rohsCompliance}}}
 - Serial Number: {{{serialNumber}}}
 
-Your validation should check the following points:
-1.  Is the Device ID "{{{deviceId}}}" present and correct?
-2.  Is the Batch ID "{{{batchId}}}" present and correct?
-3.  Is the Manufacturing Date "{{{manufacturingDate}}}" present and correct?
-4.  Is the RoHS compliance status (equivalent to "{{{rohsCompliance}}}") present and correct? (e.g., look for "RoHS: Yes", "RoHS Compliant" for true; "RoHS: No" for false).
-5.  Is the Serial Number "{{{serialNumber}}}" present and correct?
+**Step 3: Formulate Response**
+- If every single piece of information is present and matches the expected values exactly, set \`isValid\` to \`true\` and \`validationResult\` to "All information is present and correct on the label.".
+- If even one piece of information is missing, incorrect, or does not match, set \`isValid\` to \`false\` and create a \`validationResult\` string that details every discrepancy found (e.g., "Device ID: Correct. Batch ID: Missing. Serial Number: Found 'SN-123' instead of 'SN-456'.").
 
-After performing all checks, you must determine the final output.
-- **If all five checks pass successfully**: Set the \`isValid\` field to \`true\`. The \`validationResult\` field should be exactly: "All information is present and correct on the label."
-- **If even one check fails**: Set the \`isValid\` field to \`false\`. The \`validationResult\` field must contain a detailed summary of each check, explaining what was correct, what was missing, or what was incorrect (and what value was found instead).
-
-Return the final JSON object based on these rules.
-
-Example for a partially incorrect label:
-{
-  "isValid": false,
-  "validationResult": "Device ID: Present and correct. Batch ID: Missing. Manufacturing Date: Present, but found '2024-07-14' instead of '2024-07-15'. RoHS Compliance: Present and correct. Serial Number: Present and correct."
-}
-Example for a fully correct label:
-{
-  "isValid": true,
-  "validationResult": "All information is present and correct on the label."
-}
+Your final output must be ONLY the JSON object conforming to the output schema. Do not add any extra text or explanations.
 `,
 });
 
@@ -109,9 +94,34 @@ const validateLabelQualityFlow = ai.defineFlow(
     inputSchema: ValidateLabelQualityInputSchema,
     outputSchema: ValidateLabelQualityOutputSchema,
   },
-  async input => {
-    const {output} = await validateLabelQualityPrompt(input);
-    return output!;
+  async (input) => {
+    try {
+      const { output } = await validateLabelQualityPrompt(input);
+
+      if (!output) {
+        console.error("AI model returned a null or undefined output.");
+        return {
+          isValid: false,
+          validationResult: "AI model failed to generate a valid response. The result was empty.",
+        };
+      }
+      
+      return output;
+    } catch (e: any) {
+      console.error("An error occurred in the validateLabelQualityFlow:", e);
+
+      // Provide a more user-friendly message for schema validation errors.
+      if (e.message?.includes("Schema validation failed")) {
+          return {
+              isValid: false,
+              validationResult: "AI failed to produce a correctly formatted JSON response. It may have returned text instead of the required JSON structure.",
+          };
+      }
+
+      return {
+        isValid: false,
+        validationResult: `An unexpected error occurred during AI validation: ${e.message || 'Unknown error'}`
+      };
+    }
   }
 );
-
