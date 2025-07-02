@@ -32,7 +32,7 @@ export default function LogDisplay({ logs, onClearLogs }: LogDisplayProps) {
             Event Log
             </CardTitle>
             <Button onClick={onClearLogs} variant="outline" size="sm" className="ml-auto">
-                <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+                <Trash2 />
                 Clear
             </Button>
         </div>

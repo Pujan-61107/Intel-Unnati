@@ -128,7 +128,7 @@ export default function InspectionStation({
                 disabled={processStatus !== 'inspecting' || !product}
                 className="w-full"
               >
-                <XCircle className="mr-2 h-5 w-5" />
+                <XCircle />
                 Reject Product
               </Button>
               <Button 
@@ -136,7 +136,7 @@ export default function InspectionStation({
                 disabled={processStatus !== 'inspecting' || !product}
                 className="w-full bg-primary hover:bg-primary/80 text-primary-foreground"
               >
-                <CheckCircle2 className="mr-2 h-5 w-5" />
+                <CheckCircle2 />
                 Approve & Generate Label
               </Button>
             </div>

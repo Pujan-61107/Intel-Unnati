@@ -148,7 +148,7 @@ export default function TraceSmartPage() {
       <main className="flex-grow container mx-auto px-4 py-6">
         <div className="mb-6 flex flex-col sm:flex-row justify-end items-center gap-2">
             <Button onClick={handleResetSimulation} variant="outline" size="sm">
-                <RotateCcwIcon className="mr-2 h-4 w-4" />
+                <RotateCcwIcon />
                 Reset Simulation
             </Button>
         </div>

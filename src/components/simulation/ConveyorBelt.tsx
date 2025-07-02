@@ -77,7 +77,7 @@ export default function ConveyorBelt({ currentProduct, onNextProduct, productQue
         
         <div className="mt-6 flex justify-center">
           <Button onClick={onNextProduct} disabled={isProcessing || productQueueCount === 0} className="bg-primary hover:bg-primary/90">
-            <ChevronRight className="mr-2 h-5 w-5" />
+            <ChevronRight />
             Load Next Product
           </Button>
         </div>

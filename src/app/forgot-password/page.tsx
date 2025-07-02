@@ -26,12 +26,10 @@ export default function ForgotPasswordPage() {
   }, [isLoggedIn, isLoadingAuth, router]);
 
   if (isLoadingAuth || (!isLoadingAuth && isLoggedIn)) {
-     return (
-      <AuthFormWrapper title="" showLogo={false}>
-        <div className="flex justify-center items-center h-32">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        </div>
-      </AuthFormWrapper>
+    return (
+      <div className="flex flex-col min-h-screen bg-background font-body items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
     );
   }
 

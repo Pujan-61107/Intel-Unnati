@@ -25,10 +25,10 @@ export default function AuthFormWrapper({ title, description, children, footerCo
               <ScanBarcode className="h-12 w-12 text-primary mx-auto" />
             </Link>
           )}
-          {title && <CardTitle className="text-2xl font-bold tracking-tight">{title}</CardTitle>}
+          {title && <CardTitle>{title}</CardTitle>}
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           {isLoading ? (
             <div className="flex justify-center items-center h-32">
               <Loader2 className="h-12 w-12 animate-spin text-primary" />

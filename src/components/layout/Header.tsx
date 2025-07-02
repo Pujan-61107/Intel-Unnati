@@ -79,15 +79,15 @@ export default function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
                 <DropdownMenuRadioItem value="light">
-                  <Sun className="mr-2 h-4 w-4" />
+                  <Sun />
                   Light
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="dark">
-                  <Moon className="mr-2 h-4 w-4" />
+                  <Moon />
                   Dark
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="system">
-                  <Laptop className="mr-2 h-4 w-4" />
+                  <Laptop />
                   System
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
@@ -118,7 +118,7 @@ export default function Header() {
                   <Link href="/profile">View Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={logout}>
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut />
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>

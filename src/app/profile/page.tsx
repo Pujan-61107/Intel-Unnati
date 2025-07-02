@@ -227,7 +227,7 @@ export default function ProfilePage() {
             <CardTitle className="text-2xl font-bold tracking-tight">User Profile</CardTitle>
             <CardDescription>Manage your account details and preferences below.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 pt-6">
             <div className="space-y-2">
               <Label htmlFor="fullName" className="flex items-center text-sm text-muted-foreground">
                 <User className="mr-2 h-4 w-4" /> Full Name
@@ -277,7 +277,7 @@ export default function ProfilePage() {
             <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline" className="w-full">
-                  <Edit3 className="mr-2 h-4 w-4" /> Change Password
+                  <Edit3 /> Change Password
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -337,7 +337,7 @@ export default function ProfilePage() {
                       </Button>
                     </DialogClose>
                     <Button type="submit" disabled={isChangingPassword}>
-                      {isChangingPassword ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Save Changes"}
+                      {isChangingPassword ? <Loader2 className="animate-spin" /> : "Save Changes"}
                     </Button>
                   </DialogFooter>
                 </form>
@@ -347,7 +347,7 @@ export default function ProfilePage() {
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" className="w-full">
-                  <Trash2 className="mr-2 h-4 w-4" /> Delete Profile
+                  <Trash2 /> Delete Profile
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -368,7 +368,7 @@ export default function ProfilePage() {
             </AlertDialog>
 
             <Button onClick={logout} variant="ghost" className="w-full">
-              <LogOut className="mr-2 h-4 w-4" /> Logout
+              <LogOut /> Logout
             </Button>
           </CardFooter>
         </Card>

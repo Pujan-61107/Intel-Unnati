@@ -29,13 +29,10 @@ export default function LoginPage() {
   }, [isLoggedIn, isLoadingAuth, router]);
 
   if (isLoadingAuth || (!isLoadingAuth && isLoggedIn)) {
-     // Show loading spinner while checking auth or if redirecting
     return (
-       <AuthFormWrapper title="" showLogo={false}>
-        <div className="flex justify-center items-center h-32">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        </div>
-      </AuthFormWrapper>
+      <div className="flex flex-col min-h-screen bg-background font-body items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
     );
   }
 
