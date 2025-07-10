@@ -16,11 +16,11 @@ import { Loader2, RotateCcwIcon } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 
 const initialProducts: Product[] = [
-  { id: 'p1', deviceId: 'DEV001', batchId: 'BATCH-A1', manufacturingDate: '2024-07-15', rohsCompliant: true, serialNumber: 'SN-TRSMT-001' },
-  { id: 'p2', deviceId: 'DEV002', batchId: 'BATCH-A2', manufacturingDate: '2024-07-16', rohsCompliant: false, serialNumber: 'SN-TRSMT-002' },
-  { id: 'p3', deviceId: 'DEV003', batchId: 'BATCH-B1', manufacturingDate: '2024-07-17', rohsCompliant: true, serialNumber: 'SN-TRSMT-003' },
-  { id: 'p4', deviceId: 'DEV004', batchId: 'BATCH-B2', manufacturingDate: '2024-07-18', rohsCompliant: true, serialNumber: 'SN-TRSMT-004' },
-  { id: 'p5', deviceId: 'DEV005', batchId: 'BATCH-C1', manufacturingDate: '2024-07-19', rohsCompliant: true, serialNumber: 'SN-TRSMT-005' },
+  { id: 'p1', deviceId: 'DEV001', batchId: 'BATCH-A1', manufacturingDate: '2024-07-15', rohsCompliant: true, serialNumber: 'SN-TRSMT-001', imageUrl: 'https://placehold.co/100x80.png' },
+  { id: 'p2', deviceId: 'DEV002', batchId: 'BATCH-A2', manufacturingDate: '2024-07-16', rohsCompliant: false, serialNumber: 'SN-TRSMT-002', imageUrl: 'https://placehold.co/100x80.png' },
+  { id: 'p3', deviceId: 'DEV003', batchId: 'BATCH-B1', manufacturingDate: '2024-07-17', rohsCompliant: true, serialNumber: 'SN-TRSMT-003', imageUrl: 'https://placehold.co/100x80.png' },
+  { id: 'p4', deviceId: 'DEV004', batchId: 'BATCH-B2', manufacturingDate: '2024-07-18', rohsCompliant: true, serialNumber: 'SN-TRSMT-004', imageUrl: 'https://placehold.co/100x80.png' },
+  { id: 'p5', deviceId: 'DEV005', batchId: 'BATCH-C1', manufacturingDate: '2024-07-19', rohsCompliant: true, serialNumber: 'SN-TRSMT-005', imageUrl: 'https://placehold.co/100x80.png' },
 ];
 
 

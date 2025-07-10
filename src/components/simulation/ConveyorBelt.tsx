@@ -56,8 +56,8 @@ export default function ConveyorBelt({ currentProduct, onNextProduct, productQue
             {currentProduct ? (
               <div className="text-center animate-fadeIn relative z-10">
                 <Image 
-                  src="https://placehold.co/100x80.png" 
-                  alt="Product" 
+                  src={currentProduct.imageUrl || "https://placehold.co/100x80.png"} 
+                  alt={currentProduct.deviceId} 
                   width={100} 
                   height={80} 
                   className="mx-auto mb-2 rounded shadow-md"

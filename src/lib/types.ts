@@ -5,7 +5,8 @@ export interface Product {
   manufacturingDate: string; // YYYY-MM-DD
   rohsCompliant: boolean;
   serialNumber: string;
-  labelImageUrl?: string; 
+  labelImageUrl?: string;
+  imageUrl?: string;
 }
 
 export interface LogEntry {
