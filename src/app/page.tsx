@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { DollarSign, Package, CheckCircle, XCircle } from 'lucide-react';
+import { IndianRupee, Package, CheckCircle, XCircle } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { useEffect, useState } from 'react';
 
@@ -96,12 +96,12 @@ export default function DashboardPage() {
               <CardTitle className="text-sm font-medium">
                 Est. Monthly Revenue
               </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <IndianRupee className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
+              <div className="text-2xl font-bold">₹3,770,500.50</div>
               <p className="text-xs text-muted-foreground">
-                +1.2% from last month
+                +5.2% from last month
               </p>
             </CardContent>
           </Card>
