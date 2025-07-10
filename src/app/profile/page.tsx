@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label";
 import { Loader2, User, Mail, KeyRound, Eye, EyeOff, Edit3, Trash2, LogOut, UserCircle2, AlertTriangle } from 'lucide-react';
-import Header from '@/components/layout/Header';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,6 +31,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 const USERS_STORAGE_KEY = 'traceSmartUsers'; 
 
@@ -218,10 +218,10 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-body">
-      <Header />
-      <main className="flex-grow container mx-auto px-4 py-12 flex items-center justify-center">
-        <Card className="w-full max-w-lg shadow-xl">
+    <DashboardLayout>
+      <div className="flex flex-col gap-4">
+        <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
+         <Card className="w-full shadow-xl">
           <CardHeader className="text-center">
             <UserCircle2 className="h-16 w-16 text-primary mx-auto mb-4" />
             <CardTitle className="text-2xl font-bold tracking-tight">User Profile</CardTitle>
@@ -372,10 +372,7 @@ export default function ProfilePage() {
             </Button>
           </CardFooter>
         </Card>
-      </main>
-      <footer className="text-center py-4 border-t border-border text-sm text-muted-foreground">
-        TraceSmart © {new Date().getFullYear()} - A Simulated Product Traceability System
-      </footer>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

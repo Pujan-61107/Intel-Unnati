@@ -5,6 +5,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 const fontSpaceGrotesk = FontSpaceGrotesk({
   subsets: ['latin'],
@@ -27,7 +28,9 @@ export default function RootLayout({
       <body className="font-body antialiased min-h-screen flex flex-col">
         <ThemeProvider>
           <AuthProvider>
-            {children}
+            <SidebarProvider>
+              {children}
+            </SidebarProvider>
           </AuthProvider>
         </ThemeProvider>
         <Toaster />

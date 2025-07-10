@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error("Error setting localStorage:", error);
     }
-    router.push('/'); // Redirect to home after login
+    router.push('/'); // Redirect to dashboard after login
   }, [router]);
 
   const logout = useCallback(() => {

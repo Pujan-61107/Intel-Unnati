@@ -7,6 +7,7 @@ import { ScanBarcode, LogOut, UserCircle2, ChevronDown, Sun, Moon, Laptop } from
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,14 +44,17 @@ export default function Header() {
   if (!mounted) {
     // To prevent hydration mismatch for theme switcher, render a placeholder or null
     return (
-      <header className="bg-card border-b border-border shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center">
-            <ScanBarcode className="h-8 w-8 text-primary mr-3" />
-            <h1 className="text-2xl font-headline font-bold text-primary">
-              TraceSmart
-            </h1>
-          </Link>
+      <header className="bg-card border-b border-border shadow-sm sticky top-0 z-40 h-[57px] flex items-center">
+        <div className="container mx-auto px-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+                 <div className="h-7 w-7 bg-muted rounded-md animate-pulse md:hidden" />
+                <Link href="/" className="flex items-center">
+                    <ScanBarcode className="h-8 w-8 text-primary mr-3" />
+                    <h1 className="text-2xl font-headline font-bold text-primary">
+                    TraceSmart
+                    </h1>
+                </Link>
+            </div>
           <div className="h-10 w-24 bg-muted rounded-md animate-pulse"></div>
         </div>
       </header>
@@ -58,14 +62,18 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-card border-b border-border shadow-md sticky top-0 z-50">
+    <header className="bg-card border-b border-border shadow-sm sticky top-0 z-40">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
-          <ScanBarcode className="h-8 w-8 text-primary mr-3" />
-          <h1 className="text-2xl font-headline font-bold text-primary">
-            TraceSmart
-          </h1>
-        </Link>
+        <div className="flex items-center gap-4">
+             <SidebarTrigger className="md:hidden" />
+             <Link href="/" className="hidden md:flex items-center">
+                <ScanBarcode className="h-8 w-8 text-primary mr-3" />
+                <h1 className="text-2xl font-headline font-bold text-primary">
+                TraceSmart
+                </h1>
+            </Link>
+        </div>
+       
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

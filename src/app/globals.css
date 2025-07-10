@@ -40,6 +40,14 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    
+    /* Sidebar specific variables for light theme */
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-ring: 217 91% 60%;
   }
 
   .dark {
@@ -70,6 +78,14 @@
     --border: 235 60% 25%;
     --input: 235 60% 22%;
     --ring: 182 100% 74%; /* Electric Blue Ring */
+
+    /* Sidebar specific variables for dark theme */
+    --sidebar-background: 235 60% 15%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 235 60% 25%;
+    --sidebar-accent: 235 60% 25%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-ring: 182 100% 74%;
   }
 }
 
